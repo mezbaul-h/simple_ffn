@@ -1,14 +1,12 @@
 from .activation import Sigmoid
-from .layer import Linear
-from .network import Sequential
+from .layer import Layer
+from .network import Network
 
 
 def main():
-    net = Sequential(
-        Linear(2, 4),
-        Sigmoid(),
-        Linear(4, 2),
-        Sigmoid(),
+    net = Network(
+        Layer(2, 3, activation=Sigmoid()),
+        Layer(3, 2, activation=Sigmoid()),
     )
 
     x = [

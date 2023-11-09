@@ -113,7 +113,7 @@ class FFNN:
 
         gradients = self.calculate_gradients()
 
-        print(gradients)
+        # print(gradients)
 
     def calculate_gradients(self):
         gradients = []
