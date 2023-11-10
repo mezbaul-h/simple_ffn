@@ -85,14 +85,13 @@ class Network:
             layer.update_weights(learning_rate)
 
     def calculate_rmse(self, target_vector, calculated_vector):
-        se = 0
+        rmse_vector = [0.0] * len(target_vector)
 
-        for target, calculated in zip(target_vector, calculated_vector):
-            se += (target - calculated)**2
+        for target_inner_vector, calculated_inner_vector in zip(target_vector, calculated_vector):
+            squared_diff = [(target - calculated)**2 for target, calculated in zip(target_inner_vector, calculated_inner_vector)]
+            rmse_vector.append(math.sqrt(sum(squared_diff) / len(squared_diff)))
 
-        mse = se / len(target_vector)
-
-        return math.sqrt(mse)
+        return rmse_vector
 
     def fit(self, x, y, learning_rate=0.5, epochs=100):
         context_switch_timer = 1 / 1000
@@ -112,10 +111,9 @@ class Network:
 
                 time.sleep(context_switch_timer)
 
-            print([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
             rmse = self.calculate_rmse([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
 
-            print(f'epoch: {i}, rmse: {rmse}')
+            print(f'epoch: {i}, rmse: {sum(rmse) / len(rmse)}')
 
             random.shuffle(combined_inputs_outputs)
 

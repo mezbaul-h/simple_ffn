@@ -10,19 +10,19 @@ def main():
     )
 
     x = [
-        # (0.5, 0.3),
+        (0.5, 0.3),
         (0.7, 0.5),
         # (0.1, 0.8),
     ]
     y = [
-        # (0.6, 0.4),
+        (0.6, 0.4),
         (0.8, 0.6),
         # (0.2, 0.9),
     ]
-    lr = 0.5
+    lr = 0.1
 
     # learn
-    net.fit(x, y, learning_rate=lr, epochs=500)
+    net.fit(x, y, learning_rate=lr, epochs=4000)
 
     # save
     weights = net.save()
