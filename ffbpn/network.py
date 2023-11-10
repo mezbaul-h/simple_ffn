@@ -1,3 +1,6 @@
+import math
+import random
+import time
 import typing
 
 from .activation import Sigmoid
@@ -23,40 +26,114 @@ class Network:
         """
         loss_vector = []
         loss_derivative_vector = []
-        output_neuron_count = len(expected_outputs)
 
         for calculated_output, expected_output in zip(calculated_outputs, expected_outputs):
-            # formula: 1/n * (expected - predicted)^2
-            loss_vector.append((1/output_neuron_count) * (expected_output - calculated_output)**2)
+            loss_vector.append((expected_output - calculated_output)**2)
             loss_derivative_vector.append(-(expected_output - calculated_output))
 
-        return loss_vector, loss_derivative_vector
+        mse = sum(loss_vector) / len(loss_vector)
+        rmse = math.sqrt(mse)
 
-    def backward(self, losses):
-        loss_vector, loss_derivative_vector = losses
+        return loss_vector, loss_derivative_vector, rmse
+
+    def backward(self, losses, learning_rate):
+        loss_vector, loss_derivative_vector, rmse = losses
         output_layer_index = len(self.layers) - 1
         gradients = []
-        layer_index_cursor = output_layer_index
-        derivative_matrix = []
 
         for current_layer_index in range(output_layer_index, -1, -1):
             current_layer = self.layers[current_layer_index]
 
-            sub_derivative_matrix = []
+            out_gradients = []
+            sub_gradients = []
 
-            weight_matrix = current_layer.weights
+            if current_layer_index == output_layer_index:
+                for i in range(current_layer.output_feature_count):
+                    out_gradients.append(loss_derivative_vector[i] * current_layer.outputs[i] * (1 - current_layer.outputs[i]))
 
-            for row in weight_matrix:
-                ssub_derivative_matrix = []
-                for column in row:
-                    ...
+            for i in range(current_layer.input_feature_count):
+                if out_gradients:
+                    sub_gradient_item = sum([out_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
+                else:
+                    next_layer_gradients = gradients[0]
+                    sub_gradient_item = sum([next_layer_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
 
-        print('-')
+                sub_gradients.append(sub_gradient_item)
 
-        return gradients
+            # calculate delta(w)s
+            for i in range(current_layer.input_feature_count):
+                for j in range(current_layer.output_feature_count):
+                    if current_layer_index == output_layer_index:
+                        delta_weight = out_gradients[j] * current_layer.inputs[i]
+                    else:
+                        next_layer_gradients = gradients[0]
+                        delta_weight = sum([next_layer_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)]) * current_layer.inputs[i] * current_layer.outputs[j] * (1 - current_layer.outputs[j])
 
-    def fit(self, x, y, learning_rate=0.5, epochs=1000):
-        for input_item, expected_outputs in zip(x, y):
-            calculated_outputs = self.forward(input_item, learning_rate)
-            losses = self.loss(calculated_outputs, expected_outputs)
-            self.backward(losses)
+                    current_layer.delta_weights[i][j] = delta_weight
+
+            # print(f'current layer {current_layer_index}')
+            # print('cin', current_layer.inputs, 'cout', current_layer.outputs)
+            # print('weights', current_layer.weights)
+            # print('delta(w)', current_layer.delta_weights)
+            # print('out gradients', out_gradients, 'sub gradients', sub_gradients)
+            # print('-')
+
+            gradients.insert(0, sub_gradients)
+
+        # update weights
+        for layer in self.layers:
+            layer.update_weights(learning_rate)
+
+    def calculate_rmse(self, target_vector, calculated_vector):
+        se = 0
+
+        for target, calculated in zip(target_vector, calculated_vector):
+            se += (target - calculated)**2
+
+        mse = se / len(target_vector)
+
+        return math.sqrt(mse)
+
+    def fit(self, x, y, learning_rate=0.5, epochs=100):
+        context_switch_timer = 1 / 1000
+        combined_inputs_outputs = list(zip(x, y))
+
+        for i in range(epochs):
+            all_calculated_outputs = []
+
+            for input_vector, output_vector in combined_inputs_outputs:
+                calculated_outputs = self.forward(input_vector, learning_rate)
+
+                all_calculated_outputs.append(calculated_outputs)
+
+                losses = self.loss(calculated_outputs, output_vector)
+
+                self.backward(losses, learning_rate)
+
+                time.sleep(context_switch_timer)
+
+            print([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
+            rmse = self.calculate_rmse([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
+
+            print(f'epoch: {i}, rmse: {rmse}')
+
+            random.shuffle(combined_inputs_outputs)
+
+            time.sleep(context_switch_timer)
+
+    def save(self):
+        weight_matrix = []
+
+        for i in range(len(self.layers)):
+            weight_matrix.append(self.layers[i].weights)
+
+        return weight_matrix
+
+    def load(self, weight_matrix):
+        for i in range(len(weight_matrix)):
+            self.layers[i].weights = weight_matrix[i]
+
+    def predict(self, x, learning_rate):
+        calculated_outputs = self.forward(x, learning_rate)
+
+        return calculated_outputs

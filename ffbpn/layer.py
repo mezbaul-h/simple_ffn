@@ -1,3 +1,5 @@
+import copy
+
 from ffbpn.activation import Sigmoid
 from ffbpn.util import generate_random_vector
 
@@ -9,7 +11,13 @@ class Layer:
         self.inputs = None
         self.outputs = None
         self.weights = generate_random_vector((input_feature_count, output_feature_count))
+        self.delta_weights = generate_random_vector((input_feature_count, output_feature_count))
         self.activation = activation
+
+    def update_weights(self, learning_rate):
+        for i in range(self.input_feature_count):
+            for j in range(self.output_feature_count):
+                self.weights[i][j] = self.weights[i][j] - (learning_rate * self.delta_weights[i][j])
 
     def __call__(self, x, learning_rate):
         self.inputs = x
