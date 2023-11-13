@@ -7,6 +7,8 @@ from .activation import Sigmoid
 from .layer import Layer
 
 
+NeuronDataType = typing.Union[float, int]
+
 class Network:
     def __init__(self, *args: Layer):
         self.layers = args
@@ -36,40 +38,59 @@ class Network:
 
         return loss_vector, loss_derivative_vector, rmse
 
-    def backward(self, losses, learning_rate):
-        loss_vector, loss_derivative_vector, rmse = losses
-        output_layer_index = len(self.layers) - 1
+    @staticmethod
+    def calculate_layer_gradients(current_layer, is_output_layer, carry_over_gradients, losses):
+        loss_derivative_vector = losses[1]
         gradients = []
+        out_gradients = []
+        sub_gradients = []
+
+        if is_output_layer:
+            for i in range(current_layer.output_feature_count):
+                out_gradients.append(loss_derivative_vector[i] * current_layer.outputs[i] * (1 - current_layer.outputs[i]))
+
+            gradients.append(out_gradients)
+
+        for i in range(current_layer.input_feature_count):
+            if out_gradients:
+                sub_gradient_item = sum([out_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
+            else:
+                sub_gradient_item = sum([carry_over_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
+
+            sub_gradients.append(sub_gradient_item)
+
+        gradients.append(sub_gradients)
+
+        return gradients
+
+    @staticmethod
+    def calculate_layer_delta_weights(current_layer, is_output_layer, carry_over_gradients, output_gradients):
+        for i in range(current_layer.input_feature_count):
+            for j in range(current_layer.output_feature_count):
+                if is_output_layer:
+                    delta_weight = output_gradients[j] * current_layer.inputs[i]
+                else:
+                    delta_weight = sum([carry_over_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)]) * current_layer.inputs[i] * current_layer.outputs[j] * (1 - current_layer.outputs[j])
+
+                current_layer.delta_weights[i][j] = delta_weight
+
+    def backward(self, losses, learning_rate):
+        output_layer_index = len(self.layers) - 1
+        carry_over_gradients = None
 
         for current_layer_index in range(output_layer_index, -1, -1):
             current_layer = self.layers[current_layer_index]
+            is_output_layer = current_layer_index == output_layer_index
 
-            out_gradients = []
-            sub_gradients = []
+            # calculate gradients
+            gradients = self.calculate_layer_gradients(current_layer, is_output_layer, carry_over_gradients, losses)
 
-            if current_layer_index == output_layer_index:
-                for i in range(current_layer.output_feature_count):
-                    out_gradients.append(loss_derivative_vector[i] * current_layer.outputs[i] * (1 - current_layer.outputs[i]))
-
-            for i in range(current_layer.input_feature_count):
-                if out_gradients:
-                    sub_gradient_item = sum([out_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
-                else:
-                    next_layer_gradients = gradients[0]
-                    sub_gradient_item = sum([next_layer_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)])
-
-                sub_gradients.append(sub_gradient_item)
+            output_gradients = gradients[0] if is_output_layer else None
 
             # calculate delta(w)s
-            for i in range(current_layer.input_feature_count):
-                for j in range(current_layer.output_feature_count):
-                    if current_layer_index == output_layer_index:
-                        delta_weight = out_gradients[j] * current_layer.inputs[i]
-                    else:
-                        next_layer_gradients = gradients[0]
-                        delta_weight = sum([next_layer_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)]) * current_layer.inputs[i] * current_layer.outputs[j] * (1 - current_layer.outputs[j])
+            self.calculate_layer_delta_weights(current_layer, is_output_layer, carry_over_gradients, output_gradients)
 
-                    current_layer.delta_weights[i][j] = delta_weight
+            carry_over_gradients = gradients.pop()
 
             # print(f'current layer {current_layer_index}')
             # print('cin', current_layer.inputs, 'cout', current_layer.outputs)
@@ -77,8 +98,6 @@ class Network:
             # print('delta(w)', current_layer.delta_weights)
             # print('out gradients', out_gradients, 'sub gradients', sub_gradients)
             # print('-')
-
-            gradients.insert(0, sub_gradients)
 
         # update weights
         for layer in self.layers:
@@ -93,7 +112,40 @@ class Network:
 
         return rmse_vector
 
-    def fit(self, x, y, learning_rate=0.5, epochs=100):
+    def validate_network(self, input_matrix: typing.List[typing.List[NeuronDataType]], output_matrix: typing.List[typing.List[NeuronDataType]], learning_rate: float, epochs: int):
+        if not self.layers:
+            raise AssertionError('no layers declared')
+
+        if (learning_rate <= 0) or (learning_rate > 1):
+            raise ValueError(f'learning rate must be in the range of (0, 1]')
+
+        if epochs <= 0:
+            raise ValueError('epoch count cannot be a negative number or zero')
+
+        input_row_count = len(input_matrix)
+        output_row_count = len(output_matrix)
+
+        if input_row_count != output_row_count:
+            raise AssertionError(f'{input_row_count} input rows provided against {output_row_count} output rows')
+
+        if not input_row_count:
+            raise AssertionError('no input data provided')
+
+        input_feature_count = len(input_matrix[0])
+        output_feature_count = len(output_matrix[0])
+
+        input_layer = self.layers[0]
+        output_layer = self.layers[-1]
+
+        if input_layer.input_feature_count != input_feature_count:
+            raise AssertionError(f'networks input layer is declared to have {input_layer.input_feature_count} features but {input_feature_count} were provided')
+
+        if output_layer.output_feature_count != output_feature_count:
+            raise AssertionError(f'networks output layer is declared to have {output_layer.output_feature_count} features but {output_feature_count} were provided')
+
+    def fit(self, x: typing.List[typing.List[NeuronDataType]], y: typing.List[typing.List[NeuronDataType]], learning_rate: float = 0.5, epochs: int = 100):
+        self.validate_network(x, y, learning_rate, epochs)
+
         context_switch_timer = 1 / 1000
         combined_inputs_outputs = list(zip(x, y))
 
