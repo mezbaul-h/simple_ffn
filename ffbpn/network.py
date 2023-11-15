@@ -3,11 +3,11 @@ import random
 import time
 import typing
 
-from .activation import Sigmoid
 from .layer import Layer
-
+from .util import calculate_rmses
 
 NeuronDataType = typing.Union[float, int]
+
 
 class Network:
     def __init__(self, *args: Layer):
@@ -103,15 +103,6 @@ class Network:
         for layer in self.layers:
             layer.update_weights(learning_rate)
 
-    def calculate_rmse(self, target_vector, calculated_vector):
-        rmse_vector = [0.0] * len(target_vector)
-
-        for target_inner_vector, calculated_inner_vector in zip(target_vector, calculated_vector):
-            squared_diff = [(target - calculated)**2 for target, calculated in zip(target_inner_vector, calculated_inner_vector)]
-            rmse_vector.append(math.sqrt(sum(squared_diff) / len(squared_diff)))
-
-        return rmse_vector
-
     def validate_network(self, input_matrix: typing.List[typing.List[NeuronDataType]], output_matrix: typing.List[typing.List[NeuronDataType]], learning_rate: float, epochs: int):
         if not self.layers:
             raise AssertionError('no layers declared')
@@ -163,9 +154,9 @@ class Network:
 
                 time.sleep(context_switch_timer)
 
-            rmse = self.calculate_rmse([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
+            rmses = calculate_rmses([item[1] for item in combined_inputs_outputs], all_calculated_outputs)
 
-            print(f'epoch: {i}, rmse: {sum(rmse) / len(rmse)}')
+            print(f'epoch: {i}, rmse: {rmses}')
 
             random.shuffle(combined_inputs_outputs)
 
