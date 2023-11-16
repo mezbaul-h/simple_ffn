@@ -1,4 +1,5 @@
 import copy
+import json
 
 from ffbpn.activation import Sigmoid
 from ffbpn.util import generate_random_vector
@@ -30,3 +31,14 @@ class Layer:
             self.outputs = self.activation(self.outputs, learning_rate)
 
         return self.outputs
+
+    def __str__(self):
+        print("--- LAYER INFORMATION ---")
+        print("INPUTS")
+        print(json.dumps(self.inputs, indent=4))
+        print("WEIGHTS")
+        print(json.dumps(self.weights, indent=4))
+        print("OUTPUTS")
+        print(json.dumps(self.outputs, indent=4))
+        print("-------------------------")
+        return ''
