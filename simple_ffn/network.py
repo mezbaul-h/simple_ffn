@@ -14,6 +14,27 @@ NeuronDataType = typing.Union[float, int]
 class Network:
     def __init__(self, *args: Layer, **kwargs):
         self.layers = args
+        # self.layers[0].weights = [
+        #     [
+        #         0.6325858845538125,
+        #         0.8815493308804143
+        #     ],
+        #     [
+        #         0.3919195106891443,
+        #         0.8489334826444461
+        #     ]
+        # ]
+        # self.layers[1].weights = [
+        #     [
+        #         0.19826811185185192,
+        #         0.9872763887752762
+        #     ],
+        #     [
+        #         0.8884594727985691,
+        #         0.48460053022885774
+        #     ]
+        # ]
+
         self.learning_rate = kwargs.get('learning_rate')
 
     def forward(self, x):
@@ -22,7 +43,8 @@ class Network:
         """
         for layer in self.layers:
             x = layer(x, self.learning_rate)
-
+            # print(x)
+        # print('--')
         return x
 
     def loss(self, calculated_outputs, expected_outputs):
@@ -71,6 +93,7 @@ class Network:
                 else:
                     # delta_weight = self.learning_rate * sum([carry_over_gradients[j] * current_layer.weights[i][j] for j in range(current_layer.output_feature_count)]) * current_layer.inputs[i]
                     delta_weight = self.learning_rate * carry_over_gradients[j] * current_layer.inputs[i]
+                    # print('dw', delta_weight, self.learning_rate, carry_over_gradients[j], current_layer.inputs[i])
 
                 current_layer.delta_weights[i][j] = delta_weight
 
@@ -142,6 +165,9 @@ class Network:
 
                 losses = self.loss(calculated_outputs, output_vector)
 
+                if math.isnan(losses[2]):
+                    print(input_vector, calculated_outputs, output_vector)
+
                 total_mse += losses[2]
 
                 self.backward(losses)
@@ -150,7 +176,7 @@ class Network:
 
             print(f'[{epoch + 1}/{epochs}] Training loss: {rmse:.4f}')
 
-            random.shuffle(combined_inputs_outputs)
+            # random.shuffle(combined_inputs_outputs)
 
             time.sleep(context_switch_timer)
 
@@ -170,7 +196,7 @@ class Network:
                 'layer_dimensions': layer_dimensions,
                 'learning_rate': self.learning_rate,
                 'weight_matrices': weight_matrices,
-            }))
+            }, indent=4))
 
     def load(self, checkpoint_filename):
         with open(checkpoint_filename, 'r') as f:

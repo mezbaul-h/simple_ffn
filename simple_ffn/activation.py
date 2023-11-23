@@ -10,13 +10,14 @@ class Sigmoid:
     def calculate_sigmoid(item, learning_rate):
         # gamma = -learning_rate * item
         gamma = -item
-        #
-        # # To avoid math range error.
+
+        # To avoid math range error.
         # if gamma < 0:
-        #     activation_value = 1 - 1 / (1 + math.exp(gamma))
+        #     a = math.exp(gamma)
+        #     activation_value = a / (1 + a)
         # else:
-        #     activation_value = 1 / (1 + math.exp(gamma))
-        print(gamma)
+        #     activation_value = 1 / (1 + math.exp(-gamma))
+
         return 1 / (1 + math.exp(gamma))
 
     def __call__(self, x, learning_rate: float):
@@ -26,4 +27,4 @@ class Sigmoid:
         for item in x:
             self.outputs.append(self.calculate_sigmoid(item, learning_rate))
 
-        return self.outputs
+        return self.outputs.copy()

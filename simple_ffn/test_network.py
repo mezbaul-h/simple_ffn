@@ -26,35 +26,54 @@ from .activation import Sigmoid
 
 
 def test_forward_propagation2():
-    lr = 1.0
+    lr = 0.1
     net = Network(
         Layer(2, 2, activation=Sigmoid()),
-        Layer(2, 1, activation=Sigmoid()),
+        Layer(2, 2, activation=None),
         learning_rate=lr,
     )
     x = [
-        [0.35, 0.9],
+        [0.7075148894363186, 0.6999537037037038],
+        [0.7075044727696519, 0.7000925925925926]
     ]
     y = [
-        [0.5],
+        [0.49375, 0.5025],
+        [0.48125, 0.5025]
     ]
 
     net.layers[0].weights = [
-        [0.1, 0.4],
-        [0.8, 0.6],
+        [
+            0.6325858845538125,
+            0.8815493308804143
+        ],
+        [
+            0.3919195106891443,
+            0.8489334826444461
+        ]
     ]
+
     net.layers[1].weights = [
-        [0.3],
-        [0.9],
+        [
+            0.19826811185185192,
+            0.9872763887752762
+        ],
+        [
+            0.8884594727985691,
+            0.48460053022885774
+        ]
     ]
 
-    out = net.forward(x[0])
-    losses = net.loss(out, y[0])
+    for i in range(25):
+        for inp, outp in zip(x, y):
+            out = net.forward(inp)
+            losses = net.loss(out, outp)
+            net.backward(losses)
 
-    net.backward(losses)
-
-    print(net.layers[0].weights)
-    print(net.layers[1].weights)
+        print(0, net.layers[0].delta_weights)
+        print(0, net.layers[0].weights)
+        print(1, net.layers[1].delta_weights)
+        print(1, net.layers[1].weights)
+        print('--')
 
     raise
 

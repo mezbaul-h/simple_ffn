@@ -32,7 +32,7 @@ class Layer:
         if self.activation:
             self.outputs = self.activation(self.outputs, learning_rate)
 
-        return self.outputs
+        return self.outputs.copy()
 
     def __str__(self):
         print("--- LAYER INFORMATION ---")
