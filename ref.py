@@ -20,7 +20,7 @@ hidden_size = 4
 output_size = 1
 learning_rate = 0.1
 momentum = 0.9
-epochs = 77
+epochs = 122
 
 # Randomly initialize weights, biases, and momentum terms
 weights_input_hidden = np.array([

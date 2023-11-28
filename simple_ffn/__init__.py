@@ -26,7 +26,7 @@ def main():
 
     try:
         network.train(x_train, y_train, epochs=num_epochs)
-        #
+
         # for x, y in zip(x_train, y_train):
         #     print(x, y, network.predict(x))
 

@@ -25,4 +25,4 @@ class Sigmoid:
         for item in x:
             self.outputs.append(self.calculate_sigmoid(item))
 
-        return self.outputs.copy()
+        return self.outputs

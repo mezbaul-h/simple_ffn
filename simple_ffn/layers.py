@@ -56,4 +56,4 @@ class Linear:
         if self.activation:
             self.outputs = self.activation.forward(self.outputs)
 
-        return self.outputs.copy()
+        return self.outputs
