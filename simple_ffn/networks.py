@@ -18,18 +18,18 @@ class Sequential:
 
         self._fix_layers()
 
-        self.layers[0].weights = [
-            [0.91300363, 0.94700325, 0.75501112, 0.76566442],
-            [0.85213534, 0.88962154, 0.8392711,  0.60951791],
-        ]
-        self.layers[0].biases = [0 for _ in self.layers[0].biases]
-        self.layers[1].weights = [
-            [0.33312217],
-            [0.10090748],
-            [0.47717155],
-            [0.42678563],
-        ]
-        self.layers[1].biases = [0 for _ in self.layers[1].biases]
+        # self.layers[0].weights = [
+        #     [0.91300363, 0.94700325, 0.75501112, 0.76566442],
+        #     [0.85213534, 0.88962154, 0.8392711,  0.60951791],
+        # ]
+        # self.layers[0].biases = [0 for _ in self.layers[0].biases]
+        # self.layers[1].weights = [
+        #     [0.33312217],
+        #     [0.10090748],
+        #     [0.47717155],
+        #     [0.42678563],
+        # ]
+        # self.layers[1].biases = [0 for _ in self.layers[1].biases]
 
     def _fix_layers(self):
         for i in range(self.num_layers):
@@ -129,43 +129,57 @@ class Sequential:
             time.sleep(1 / 1000)
 
     def save(self, checkpoint_filename='checkpoint.json'):
-        activations = []
-        layer_dimensions = []
-        weight_matrices = []
+        layer_params = []
 
         for i in range(len(self.layers)):
-            activations.append('sigmoid' if self.layers[i].activation else None)
-            layer_dimensions.append((self.layers[i].input_feature_count, self.layers[i].output_feature_count))
-            weight_matrices.append(self.layers[i].weights)
+            current_layer = self.layers[i]
+
+            layer_params.append({
+                'sigmoid_activation': current_layer.activation is not None,
+                'layer_dimensions': (current_layer.input_feature_count, current_layer.output_feature_count),
+                'weights': current_layer.weights,
+                'delta_weights': current_layer.delta_weights,
+                'biases': current_layer.biases,
+                'delta_biases': current_layer.delta_biases,
+
+            })
 
         with open(checkpoint_filename, 'w+') as f:
             f.write(json.dumps({
-                'activations': activations,
-                'layer_dimensions': layer_dimensions,
                 'learning_rate': self.learning_rate,
-                'weight_matrices': weight_matrices,
+                'momentum': self.momentum,
+                'layer_params': layer_params,
             }, indent=4))
 
-    def load(self, checkpoint_filename):
+    @classmethod
+    def load(cls, checkpoint_filename):
         with open(checkpoint_filename, 'r') as f:
             checkpoint_data = json.loads(f.read())
 
-        activation_params = checkpoint_data['activations']
-        layer_dimensions = checkpoint_data['layer_dimensions']
-        self.layers = []
+        network_layers = []
 
-        for i in range(len(activation_params)):
-            activation = activations[i]
-            layer_dimension = layer_dimensions[i]
+        for layer_param in checkpoint_data['layer_params']:
+            activation_function = None
 
-            self.layers.append(layers.Linear(input_feature_count=layer_dimension[0], output_feature_count=layer_dimension[1], activation=activations.Sigmoid() if activation == 'sigmoid' else None))
+            if layer_param['sigmoid_activation']:
+                activation_function = activations.Sigmoid()
 
-        weight_matrices = checkpoint_data['weight_matrices']
+            layer = layers.Linear(layer_param['layer_dimensions'][0], layer_param['layer_dimensions'][1], activation_function)
 
-        for i in range(len(weight_matrices)):
-            self.layers[i].weights = weight_matrices[i]
+            layer.weights = layer_param['weights']
+            layer.delta_weights = layer_param['delta_weights']
+            layer.biases = layer_param['biases']
+            layer.delta_biases = layer_param['delta_biases']
 
-        self.learning_rate = checkpoint_data['learning_rate']
+            network_layers.append(layer)
+
+        instance = cls(
+            *network_layers,
+            learning_rate=checkpoint_data['learning_rate'],
+            momentum=checkpoint_data['momentum'],
+        )
+
+        return instance
 
     def __call__(self, features):
         predictions = self.forward(features)

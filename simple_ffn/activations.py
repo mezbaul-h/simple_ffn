@@ -9,9 +9,10 @@ class Sigmoid:
 
     @staticmethod
     def calculate_sigmoid(value):
-        gamma = -value
+        if value < 0:
+            return 1 - (1 / 1 + math.exp(value))
 
-        return 1 / (1 + math.exp(gamma))
+        return 1 / (1 + math.exp(-value))
 
     @staticmethod
     def calculate_sigmoid_derivative(value):
