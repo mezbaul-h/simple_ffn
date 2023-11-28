@@ -11,8 +11,10 @@ class Sigmoid:
     def calculate_sigmoid(value):
         # if value < 0:
         #     return 1 - (1 / 1 + math.exp(value))
-
-        return 1 / (1 + math.exp(-value))
+        try:
+            return 1 / (1 + math.exp(-value))
+        except OverflowError:
+            return 1 - (1 / 1 + math.exp(value))
 
     @staticmethod
     def calculate_sigmoid_derivative(value):
