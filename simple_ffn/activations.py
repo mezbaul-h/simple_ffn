@@ -9,21 +9,13 @@ class Sigmoid:
 
     @staticmethod
     def calculate_sigmoid(value):
-        # gamma = -learning_rate * item
         gamma = -value
-
-        # To avoid math range error.
-        # if gamma < 0:
-        #     a = math.exp(gamma)
-        #     activation_value = a / (1 + a)
-        # else:
-        #     activation_value = 1 / (1 + math.exp(-gamma))
 
         return 1 / (1 + math.exp(gamma))
 
     @staticmethod
     def calculate_sigmoid_derivative(value):
-        return Sigmoid.calculate_sigmoid(value) * (1 - Sigmoid.calculate_sigmoid(value))
+        return value * (1 - value)
 
     def __call__(self, x):
         self.inputs = x

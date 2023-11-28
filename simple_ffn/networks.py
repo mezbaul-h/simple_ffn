@@ -3,9 +3,7 @@ import math
 import time
 import typing
 
-from .activations import Sigmoid
-from . import layers, activations
-from .utils import transpose_matrix
+from . import activations, layers
 
 NeuronDataType = typing.Union[float, int]
 
@@ -63,7 +61,7 @@ class Sequential:
             for i in range(current_layer.input_feature_count):
                 for j in range(current_layer.output_feature_count):
                     if not current_layer.next_layer:  # output layer
-                        layer_gradients.append(losses[0] * current_layer.weights[i][j] * current_layer.inputs[i] * (1 - current_layer.inputs[i]))
+                        layer_gradients.append(losses[0] * current_layer.weights[i][j] * activations.Sigmoid.calculate_sigmoid_derivative(current_layer.inputs[i]))
 
                         delta_bias = losses[j]
                         delta_weight = current_layer.inputs[i] * losses[j]
@@ -152,15 +150,15 @@ class Sequential:
         with open(checkpoint_filename, 'r') as f:
             checkpoint_data = json.loads(f.read())
 
-        activations = checkpoint_data['activations']
+        activation_params = checkpoint_data['activations']
         layer_dimensions = checkpoint_data['layer_dimensions']
         self.layers = []
 
-        for i in range(len(activations)):
+        for i in range(len(activation_params)):
             activation = activations[i]
             layer_dimension = layer_dimensions[i]
 
-            self.layers.append(layers.Linear(input_feature_count=layer_dimension[0], output_feature_count=layer_dimension[1], activation=Sigmoid() if activation == 'sigmoid' else None))
+            self.layers.append(layers.Linear(input_feature_count=layer_dimension[0], output_feature_count=layer_dimension[1], activation=activations.Sigmoid() if activation == 'sigmoid' else None))
 
         weight_matrices = checkpoint_data['weight_matrices']
 
