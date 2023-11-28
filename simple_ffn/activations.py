@@ -18,7 +18,7 @@ class Sigmoid:
     def calculate_sigmoid_derivative(value):
         return value * (1 - value)
 
-    def __call__(self, x):
+    def forward(self, x):
         self.inputs = x
         self.outputs = []
 

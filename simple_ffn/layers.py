@@ -54,6 +54,6 @@ class Linear:
             self.outputs[i] = sum([features[j] * self.weights[j][i] for j in range(len(features))]) + self.biases[i]
 
         if self.activation:
-            self.outputs = self.activation(self.outputs)
+            self.outputs = self.activation.forward(self.outputs)
 
         return self.outputs.copy()
