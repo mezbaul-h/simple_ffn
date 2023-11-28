@@ -9,8 +9,8 @@ class Sigmoid:
 
     @staticmethod
     def calculate_sigmoid(value):
-        if value < 0:
-            return 1 - (1 / 1 + math.exp(value))
+        # if value < 0:
+        #     return 1 - (1 / 1 + math.exp(value))
 
         return 1 / (1 + math.exp(-value))
 

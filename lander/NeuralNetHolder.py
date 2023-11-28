@@ -23,7 +23,7 @@ class NeuralNetHolder:
             numpy.pad(input_row, (0, 2)).reshape(1, -1)
         )[0, :2]
 
-        prediction_scaled = self.model(scaled_input_row)
+        prediction_scaled = self.model.predict(scaled_input_row)
 
         prediction_unscaled = [
             item

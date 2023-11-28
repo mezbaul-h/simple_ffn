@@ -1,10 +1,7 @@
-import copy
-import json
-import sys
 import typing
 
 from simple_ffn.activations import Sigmoid
-from simple_ffn.utils import make_random_matrix
+from simple_ffn.utils import make_random_matrix, make_zeroes_matrix
 
 
 class Linear:
@@ -13,27 +10,40 @@ class Linear:
         self.output_feature_count = output_feature_count
         self.inputs = None
         self.learning_rate = None
+        self.momentum = None
         self.outputs = None
 
-        self.biases = make_random_matrix(1, output_feature_count)[0]
-        self.delta_biases = make_random_matrix(1, output_feature_count)[0]
+        self.biases = make_zeroes_matrix(1, output_feature_count)[0]
+        self.biases_momentum = make_zeroes_matrix(1, output_feature_count)[0]
+        self.delta_biases = make_zeroes_matrix(1, output_feature_count)[0]
 
         self.weights = make_random_matrix(input_feature_count, output_feature_count)
-        self.delta_weights = make_random_matrix(input_feature_count, output_feature_count)
+        self.weights_momentum = make_zeroes_matrix(input_feature_count, output_feature_count)
+        self.delta_weights = make_zeroes_matrix(input_feature_count, output_feature_count)
 
         self.activation = activation
         self.next_layer: typing.Optional[Linear] = None
         self.previous_layer: typing.Optional[Linear] = None
 
-    def update_biases_and_weights(self):
+    def _calculate_momenta(self):
         for i in range(self.output_feature_count):
-            self.biases[i] -= (self.learning_rate * self.delta_biases[i])
+            self.biases_momentum[i] = (self.momentum * self.biases_momentum[i]) - (self.learning_rate * self.delta_biases[i])
 
         for i in range(self.input_feature_count):
             for j in range(self.output_feature_count):
-                self.weights[i][j] -= (self.learning_rate * self.delta_weights[i][j])
+                self.weights_momentum[i][j] = (self.momentum * self.weights_momentum[i][j]) - (self.learning_rate * self.delta_weights[i][j])
 
-    def __call__(self, features):
+    def update_biases_and_weights(self):
+        self._calculate_momenta()
+
+        for i in range(self.output_feature_count):
+            self.biases[i] += self.biases_momentum[i]
+
+        for i in range(self.input_feature_count):
+            for j in range(self.output_feature_count):
+                self.weights[i][j] += self.weights_momentum[i][j]
+
+    def forward(self, features):
         """
         Does forward propagation.
         """

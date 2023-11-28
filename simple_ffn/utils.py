@@ -1,21 +1,24 @@
-import math
 import random
-import typing
 
 
-def get_random_weight():
+def _get_random_weight():
     return min(random.random() + 0.1, 0.99)
 
 
-def make_random_matrix(row_size, column_size):
+def _get_zero_weight():
+    return 0.0
+
+
+def _make_matrix(row_size, column_size, value_func):
     return [
-        [get_random_weight() for _ in range(column_size)]
+        [value_func() for _ in range(column_size)]
         for _ in range(row_size)
     ]
 
 
-def transpose_matrix(matrix):
-    # Use nested list comprehensions to transpose the matrix
-    transposed_matrix = [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+def make_random_matrix(row_size, column_size):
+    return _make_matrix(row_size, column_size, _get_random_weight)
 
-    return transposed_matrix
+
+def make_zeroes_matrix(row_size, column_size):
+    return _make_matrix(row_size, column_size, _get_zero_weight)

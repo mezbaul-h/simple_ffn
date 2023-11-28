@@ -10,7 +10,7 @@ def main():
 
     learning_rate = 0.01
     momentum = 0.9
-    num_epochs = 100
+    num_epochs = 1000
 
     data_loader = DataLoader(
         source_filename=source_filename,
@@ -26,8 +26,11 @@ def main():
 
     try:
         network.train(x_train, y_train, epochs=num_epochs)
+        #
+        # for x, y in zip(x_train, y_train):
+        #     print(x, y, network.predict(x))
 
-        # network.save('ffn_checkpoint.json')
+        network.save('ffn_checkpoint.json')
     except KeyboardInterrupt:
-        # network.save('ffn_checkpoint.json')
+        network.save('ffn_checkpoint.json')
         ...

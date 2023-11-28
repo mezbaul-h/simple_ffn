@@ -1,10 +1,6 @@
 import json
 import time
-import typing
-
 from . import activations, layers
-
-NeuronDataType = typing.Union[float, int]
 
 
 class Sequential:
@@ -21,14 +17,12 @@ class Sequential:
         #     [0.91300363, 0.94700325, 0.75501112, 0.76566442],
         #     [0.85213534, 0.88962154, 0.8392711,  0.60951791],
         # ]
-        # self.layers[0].biases = [0 for _ in self.layers[0].biases]
         # self.layers[1].weights = [
         #     [0.33312217],
         #     [0.10090748],
         #     [0.47717155],
         #     [0.42678563],
         # ]
-        # self.layers[1].biases = [0 for _ in self.layers[1].biases]
 
     def _fix_layers(self):
         for i in range(self.num_layers):
@@ -37,6 +31,7 @@ class Sequential:
             current_layer.previous_layer = self.layers[i - 1] if i > 0 else None
 
             current_layer.learning_rate = self.learning_rate
+            current_layer.momentum = self.momentum
 
             if current_layer.activation:
                 current_layer.activation.learning_rate = self.learning_rate
@@ -46,7 +41,7 @@ class Sequential:
         Feeds forward a set of features.
         """
         for index, layer in enumerate(self.layers):
-            features = layer(features)
+            features = layer.forward(features)
 
         return features
 
@@ -76,7 +71,7 @@ class Sequential:
         for layer in self.layers:
             layer.update_biases_and_weights()
 
-    def train(self, x, y, epochs: int = 100):
+    def train(self, x, y, epochs: int = 1):
         """
         TODO: Randomize training batch each epoch.
         """
@@ -94,7 +89,7 @@ class Sequential:
 
             time.sleep(1 / 1000)
 
-    def fit(self, x, y, epochs):
+    def fit(self, x, y, epochs: int = 1):
         self.train(x, y, epochs)
 
     def save(self, checkpoint_filename='checkpoint.json'):
@@ -154,10 +149,6 @@ class Sequential:
         predictions = self.forward(features)
 
         return predictions
-
-    def __call__(self, features):
-        return self.predict(features)
-
 
     def get_score(self, x, y):
         return 1
