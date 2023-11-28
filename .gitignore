@@ -247,3 +247,6 @@ fabric.properties
 
 # Model checkpoints.
 *_checkpoint.*
+
+# Tensorboard
+/logs
