@@ -1,7 +1,7 @@
 import pytest
-from .network import Network
-from .layer import Layer
-from .activation import Sigmoid
+from .networks import Network
+from .layers import Layer
+from .activations import Sigmoid
 
 
 @pytest.fixture
