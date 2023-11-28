@@ -1,5 +1,4 @@
 import json
-import math
 import time
 import typing
 
@@ -77,43 +76,10 @@ class Sequential:
         for layer in self.layers:
             layer.update_biases_and_weights()
 
-    def validate_network(self, input_matrix: typing.List[typing.List[NeuronDataType]], output_matrix: typing.List[typing.List[NeuronDataType]], epochs: int):
-        if not self.layers:
-            raise AssertionError('no layers declared')
-
-        if (self.learning_rate <= 0) or (self.learning_rate > 1):
-            raise ValueError(f'learning rate must be in the range of (0, 1]')
-
-        if epochs <= 0:
-            raise ValueError('epoch count cannot be a negative number or zero')
-
-        input_row_count = len(input_matrix)
-        output_row_count = len(output_matrix)
-
-        if input_row_count != output_row_count:
-            raise AssertionError(f'{input_row_count} input rows provided against {output_row_count} output rows')
-
-        if not input_row_count:
-            raise AssertionError('no input data provided')
-
-        input_feature_count = len(input_matrix[0])
-        output_feature_count = len(output_matrix[0])
-
-        input_layer = self.layers[0]
-        output_layer = self.layers[-1]
-
-        if input_layer.input_feature_count != input_feature_count:
-            raise AssertionError(f'networks input layer is declared to have {input_layer.input_feature_count} features but {input_feature_count} were provided')
-
-        if output_layer.output_feature_count != output_feature_count:
-            raise AssertionError(f'networks output layer is declared to have {output_layer.output_feature_count} features but {output_feature_count} were provided')
-
     def train(self, x, y, epochs: int = 100):
         """
         TODO: Randomize training batch each epoch.
         """
-        self.validate_network(x, y, epochs)
-
         for epoch in range(epochs):
             epoch_loss = 0
 
