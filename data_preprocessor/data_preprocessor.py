@@ -26,7 +26,9 @@ class DataPreprocessor:
         self.scaler = MinMaxScaler()
 
     def sanitize_data(self):
-        self.df = self.df.round(decimals=4)
+        # self.df = self.df.round(decimals=6)
+
+        self.df = self.df.loc[(self.df != 0).all(axis=1)]
 
         self.df.drop_duplicates(subset=["x_target", "y_target"], keep="last", inplace=True)
 

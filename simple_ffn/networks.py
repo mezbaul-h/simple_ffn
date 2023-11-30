@@ -1,6 +1,7 @@
 import json
 import time
 from . import activations, layers
+from .utils import get_random_vector_indexes
 
 
 class Sequential:
@@ -71,21 +72,32 @@ class Sequential:
         for layer in self.layers:
             layer.update_biases_and_weights()
 
-    def train(self, x, y, epochs: int = 1):
-        """
-        TODO: Randomize training batch each epoch.
-        """
+    def train(self, x_train, y_train, epochs: int = 1, x_validation=None, y_validation=None):
         for epoch in range(epochs):
             epoch_loss = 0
 
-            for features, targets in zip(x, y):
+            if epoch:
+                training_index_order = get_random_vector_indexes(len(x_train))
+            else:
+                training_index_order = list(range(len(x_train)))
+
+            for index in training_index_order:
+                features = x_train[index]
+                targets = y_train[index]
+
                 predictions = self.forward(features)
                 losses = [prediction - target for prediction, target in zip(predictions, targets)]
                 epoch_loss += 0.5 * (sum([loss**2 for loss in losses]) / len(losses))
 
                 self.backward(losses)
 
-            print(f'[{epoch + 1}/{epochs}] Training loss: {epoch_loss:.6f}')
+            validation_loss = 0
+
+            if x_validation and y_validation:
+                # TODO: make sure x and y validation sets are scaled
+                validation_loss = self.get_score(x_validation, y_validation)
+
+            print(f'[{epoch + 1}/{epochs}] Training loss: {epoch_loss:.6f} Validation loss: {validation_loss:.6f}')
 
             time.sleep(1 / 1000)
 
@@ -151,4 +163,11 @@ class Sequential:
         return predictions
 
     def get_score(self, x, y):
-        return 1
+        cum_loss = 0
+
+        for features, targets in zip(x, y):
+            predictions = self.forward(features)
+            losses = [prediction - target for prediction, target in zip(predictions, targets)]
+            cum_loss += 0.5 * (sum([loss ** 2 for loss in losses]) / len(losses))
+
+        return cum_loss

@@ -8,9 +8,9 @@ def main():
     args = parser.parse_args()
     source_filename = args.filename[0]
 
-    learning_rate = 0.01
+    learning_rate = 0.0001
     momentum = 0.9
-    num_epochs = 1000
+    num_epochs = 200
 
     data_loader = DataLoader(
         source_filename=source_filename,
@@ -18,8 +18,8 @@ def main():
     x_train, y_train, x_test, y_test = data_loader.train_test_split()
 
     network = networks.Sequential(
-        layers.Linear(2, 4, activation=activations.Sigmoid()),
-        layers.Linear(4, 2),
+        layers.Linear(2, 2, activation=activations.Sigmoid()),
+        layers.Linear(2, 2),
         learning_rate=learning_rate,
         momentum=momentum,
     )
