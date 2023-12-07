@@ -16,17 +16,17 @@ from simple_ffn.datasets import Dataset
 
 
 def main():
-    best_score = float("-inf")
+    best_score = float("inf")
     best_params = None
 
     dataset = Dataset()
     x_train, x_validation, x_test, y_train, y_validation, y_test = dataset.process()
 
     param_grid = {
+        "epochs": [250],
+        "hidden_size": [2, 4, 8, 16],
         "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
         "momentum": [0.5, 0.8, 0.9],
-        "hidden_size": [2, 4, 8, 16],
-        "epochs": [500],
     }
     num_combinations = reduce(operator.mul, [len(item) for item in param_grid.values()])
     grid_search_results = {}
