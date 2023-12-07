@@ -1,5 +1,4 @@
-from lander.Main import start_game_window
+from .Main import start_game_window
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     start_game_window()

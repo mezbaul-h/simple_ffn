@@ -1,10 +1,10 @@
 import pygame
-from .Vector import Vector
+
 from .CollisionUtility import CollisionUtility
+from .Vector import Vector
 
 
 class Lander(pygame.sprite.Sprite):
-
     def __init__(self, filepath, location, velocity, controller):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filepath)
@@ -28,7 +28,7 @@ class Lander(pygame.sprite.Sprite):
         return self.rect.colliderect(surface.landing_pad)
 
     def surface_collision(self, surface):
-        if (self.rect.colliderect(surface.polygon_rect)):
+        if self.rect.colliderect(surface.polygon_rect):
             collided = CollisionUtility.check_lander_collision_with_surface(self, surface)
             return collided
 
@@ -52,10 +52,10 @@ class Lander(pygame.sprite.Sprite):
             theta = -10 * delta_time
 
         self.current_angle = self.current_angle + theta
-        if (self.current_angle < 0):
+        if self.current_angle < 0:
             self.current_angle = self.current_angle + 360
 
-        if (self.current_angle >= 360):
+        if self.current_angle >= 360:
             self.current_angle = self.current_angle % 360
 
         movement = movement.rotate(-self.current_angle)
@@ -75,10 +75,10 @@ class Lander(pygame.sprite.Sprite):
         if speed > 8:
             self.velocity = last_velocity
 
-        last_position = self.position # save last position to compute y movement
+        last_position = self.position  # save last position to compute y movement
         # update the changes in position
         self.position = self.position.add(self.velocity)
-        if (self.position.y - last_position.y > 0):
+        if self.position.y - last_position.y > 0:
             self.is_going_down = True
         else:
             self.is_going_down = False

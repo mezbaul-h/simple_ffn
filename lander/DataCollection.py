@@ -1,8 +1,7 @@
-from lander.constants import MODULE_ROOT_DIR
+from simple_ffn.settings import DATA_ROOT_DIR
 
 
 class DataCollection:
-
     def __init__(self, all_data):
         self.buffer = []
         self.all_data = all_data
@@ -18,16 +17,23 @@ class DataCollection:
 
         # create comma separated string row
         if self.all_data:
-            input_row = str(current_speed)+"," + \
-                        str(current_velocity.x) + "," + \
-                        str(current_velocity.y) + "," + \
-                        str(current_angle) + "," + \
-                        str(x_target) + "," + \
-                        str(y_target) + "," + \
-                        str(dist_to_surface)
+            input_row = (
+                str(current_speed)
+                + ","
+                + str(current_velocity.x)
+                + ","
+                + str(current_velocity.y)
+                + ","
+                + str(current_angle)
+                + ","
+                + str(x_target)
+                + ","
+                + str(y_target)
+                + ","
+                + str(dist_to_surface)
+            )
         else:
-            input_row = str(x_target) + "," + \
-                        str(y_target)
+            input_row = str(x_target) + "," + str(y_target)
 
         return input_row
 
@@ -44,30 +50,38 @@ class DataCollection:
         new_vel_x = lander.velocity.x
 
         turning = [0, 0]
-        if (controller.is_left()):
-            turning = [1,0]
-        elif (controller.is_right()):
-            turning = [0,1]
+        if controller.is_left():
+            turning = [1, 0]
+        elif controller.is_right():
+            turning = [0, 1]
         new_angle = lander.current_angle
 
         # add output values to the string input row
         if self.all_data:
-            status_row = input_row + "," + \
-                        str(thrust) + "," + \
-                        str(new_vel_y) + "," + \
-                        str(new_vel_x) + "," + \
-                        str(new_angle) + "," + \
-                        str(turning[0]) + "," + str(turning[1]) + "\n"
+            status_row = (
+                input_row
+                + ","
+                + str(thrust)
+                + ","
+                + str(new_vel_y)
+                + ","
+                + str(new_vel_x)
+                + ","
+                + str(new_angle)
+                + ","
+                + str(turning[0])
+                + ","
+                + str(turning[1])
+                + "\n"
+            )
         else:
-            status_row = input_row + "," + \
-                        str(new_vel_y) + "," + \
-                        str(new_vel_x) + "\n"
+            status_row = input_row + "," + str(new_vel_y) + "," + str(new_vel_x) + "\n"
 
         # save comma separated row in the file
         self.buffer.append(status_row)
 
     def write_to_file(self):
-        with open(MODULE_ROOT_DIR / "ce889_dataCollection.csv", "a+") as f:
+        with open(DATA_ROOT_DIR / "ce889_dataCollection.csv", "a+") as f:
             for row in self.buffer:
                 f.write(row)
 

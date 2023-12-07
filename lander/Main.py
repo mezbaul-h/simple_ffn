@@ -1,17 +1,18 @@
 # Main Runnable file for the CE889 Assignment
 # Project built by Lewis Veryard and Hugo Leon-Garza
+from simple_ffn.settings import PROJECT_ROOT
+
 from .GameLoop import GameLoop
-from .constants import MODULE_ROOT_DIR
 
 
 def get_config():
     return {
-        'SCREEN_HEIGHT': 1000,
-        'SCREEN_WIDTH': 1600,
-        'LANDER_IMG_PATH': MODULE_ROOT_DIR / 'Sprites/rocket_lander.png',
-        'BACKGROUND_IMG_PATH': MODULE_ROOT_DIR / 'Sprites/BackGround.bmp',
-        'FULLSCREEN': True,
-        'ALL_DATA': False,
+        "SCREEN_HEIGHT": 1000,
+        "SCREEN_WIDTH": 1600,
+        "LANDER_IMG_PATH": PROJECT_ROOT / "lander" / "Sprites/rocket_lander.png",
+        "BACKGROUND_IMG_PATH": PROJECT_ROOT / "lander" / "Sprites/BackGround.bmp",
+        "FULLSCREEN": True,
+        "ALL_DATA": False,
     }
 
 

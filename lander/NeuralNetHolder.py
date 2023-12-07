@@ -1,9 +1,7 @@
 import pathlib
 
-import numpy
-
-from simple_ffn.data_scaler import DataScaler
 from simple_ffn.networks import Sequential
+from simple_ffn.scalers import DataScaler
 
 
 class NeuralNetHolder:
@@ -15,21 +13,16 @@ class NeuralNetHolder:
 
         self.data_scaler.load_scaler_params()
 
-        self.model = Sequential.load('ffn_checkpoint.json')
+        self.model = Sequential.load("ffn_checkpoint.json")
 
     def predict(self, input_row: str):
-        input_row = [float(item) for item in input_row.split(',')]
-        scaled_input_row = self.data_scaler.scale_data(
-            numpy.pad(input_row, (0, 2)).reshape(1, -1)
-        )[0, :2]
+        input_row = [float(item) for item in input_row.split(",")]
+        scaled_input_row = self.data_scaler.scale_data(numpy.pad(input_row, (0, 2)).reshape(1, -1))[0, :2]
 
         prediction_scaled = self.model.predict(scaled_input_row)
 
         prediction_unscaled = [
-            item
-            for item in self.data_scaler.unscale_data(
-                numpy.pad(prediction_scaled, (2, 0)).reshape(1, -1)
-            )[0, 2:]
+            item for item in self.data_scaler.unscale_data(numpy.pad(prediction_scaled, (2, 0)).reshape(1, -1))[0, 2:]
         ]
 
         return prediction_unscaled[1], prediction_unscaled[0]

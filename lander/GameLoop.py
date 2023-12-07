@@ -1,17 +1,22 @@
-import pygame, time, ctypes, sys
-from .EventHandler import EventHandler
-from .Lander import Lander
+import ctypes
+import sys
+import time
+
+import pygame
+
 from .Controller import Controller
-from .Vector import Vector
-from .GameLogic import GameLogic
-from .Surface import Surface
-from .MainMenu import MainMenu
-from .ResultMenu import ResultMenu
 from .DataCollection import DataCollection
+from .EventHandler import EventHandler
+from .GameLogic import GameLogic
+from .Lander import Lander
+from .MainMenu import MainMenu
 from .NeuralNetHolder import NeuralNetHolder
+from .ResultMenu import ResultMenu
+from .Surface import Surface
+from .Vector import Vector
+
 
 class GameLoop:
-
     def __init__(self):
         self.controller = Controller()
         self.Handler = EventHandler(self.controller)
@@ -29,22 +34,24 @@ class GameLoop:
         if config_data["FULLSCREEN"]:
             screen = pygame.display.set_mode()
             screen_rect = screen.get_rect()
-            config_data['SCREEN_HEIGHT'] = screen_rect.h
-            config_data['SCREEN_WIDTH'] = screen_rect.w
-            self.screen = pygame.display.set_mode((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']), pygame.FULLSCREEN)
+            config_data["SCREEN_HEIGHT"] = screen_rect.h
+            config_data["SCREEN_WIDTH"] = screen_rect.w
+            self.screen = pygame.display.set_mode(
+                (config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"]), pygame.FULLSCREEN
+            )
         else:
-            config_data['SCREEN_HEIGHT'] = int(config_data['SCREEN_HEIGHT'])
-            config_data['SCREEN_WIDTH'] = int(config_data['SCREEN_WIDTH'])
-            self.screen = pygame.display.set_mode((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))
-        pygame.display.set_caption('CE889 Assignment Template')
-        pygame.display.set_icon(pygame.image.load(config_data['LANDER_IMG_PATH']))
+            config_data["SCREEN_HEIGHT"] = int(config_data["SCREEN_HEIGHT"])
+            config_data["SCREEN_WIDTH"] = int(config_data["SCREEN_WIDTH"])
+            self.screen = pygame.display.set_mode((config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"]))
+        pygame.display.set_caption("CE889 Assignment Template")
+        pygame.display.set_icon(pygame.image.load(config_data["LANDER_IMG_PATH"]))
 
     def score_calculation(self):
         score = 1000.0 - (self.surface.centre_landing_pad[0] - self.lander.position.x)
         angle = self.lander.current_angle
-        if(self.lander.current_angle == 0):
+        if self.lander.current_angle == 0:
             angle = 1
-        if(self.lander.current_angle > 180):
+        if self.lander.current_angle > 180:
             angle = abs(self.lander.current_angle - 360)
         score = score / angle
         velocity = 500 - (self.lander.velocity.x + self.lander.velocity.y)
@@ -58,31 +65,33 @@ class GameLoop:
     def main_loop(self, config_data):
         pygame.font.init()  # you have to call this at the start,
         # if you want to use this module you need to call pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        myfont = pygame.font.SysFont("Comic Sans MS", 30)
 
         # create the group for visuals to be updated
         sprites = pygame.sprite.Group()
 
         # booleans for what the game state is
-        on_menus = [True, False, False] # Main, Won, Lost
+        on_menus = [True, False, False]  # Main, Won, Lost
         game_start = False
 
         # Game modes: Play Game, Data Collection, Neural Net, Quit
         game_modes = [False, False, False, False]
 
         # The main loop of the window
-        background_image = pygame.image.load(config_data['BACKGROUND_IMG_PATH']).convert_alpha()
-        background_image = pygame.transform.scale(background_image, (config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))
+        background_image = pygame.image.load(config_data["BACKGROUND_IMG_PATH"]).convert_alpha()
+        background_image = pygame.transform.scale(
+            background_image, (config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"])
+        )
 
         data_collector = DataCollection(config_data["ALL_DATA"])
-        main_menu = MainMenu((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))
-        result_menu = ResultMenu((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))
+        main_menu = MainMenu((config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"]))
+        result_menu = ResultMenu((config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"]))
         score = 0
         # Initialize
         while True:
             # menus
             # check if Quit button was clicked
-            if game_modes[len(game_modes)-1]:
+            if game_modes[len(game_modes) - 1]:
                 pygame.quit()
                 sys.exit()
 
@@ -153,7 +162,7 @@ class GameLoop:
                         # print("current status lander: ", self.lander.velocity.y, " -- ", self.lander.velocity.x, " -- ", self.lander.velocity.y > nn_prediction[1], " -- ", self.lander.velocity.x < nn_prediction[0], " -- ", self.lander.velocity.y - nn_prediction[1])
 
                         if (self.lander.current_angle > 30) and (self.lander.current_angle < 330):
-                            ang_val = (self.lander.current_angle - 30) / (330-30)
+                            ang_val = (self.lander.current_angle - 30) / (330 - 30)
                             ang_val = round(ang_val)
 
                             if ang_val == 0:
@@ -161,7 +170,7 @@ class GameLoop:
                             else:
                                 self.lander.current_angle = 330
 
-                self.screen.blit(background_image,(0, 0))
+                self.screen.blit(background_image, (0, 0))
 
                 if not self.Handler.first_key_press and game_start:
                     self.update_objects()
@@ -187,11 +196,13 @@ class GameLoop:
                         data_collector.write_to_file()
                         data_collector.reset()
                 # check if lander collided with surface
-                elif (self.lander.surface_collision(self.surface) or self.lander.window_collision((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))):
+                elif self.lander.surface_collision(self.surface) or self.lander.window_collision(
+                    (config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"])
+                ):
                     on_menus[2] = True
                     data_collector.reset()
 
-                if (on_menus[1] or on_menus[2]):
+                if on_menus[1] or on_menus[2]:
                     game_start = False
                     for i in range(len(game_modes)):
                         game_modes[i] = False
@@ -205,7 +216,12 @@ class GameLoop:
         self.game_logic.update(0.2)
 
     def setup_lander(self, config_data):
-        lander = Lander(config_data['LANDER_IMG_PATH'], [config_data['SCREEN_WIDTH'] / 2, config_data['SCREEN_HEIGHT'] / 2], Vector(0, 0), self.controller)
+        lander = Lander(
+            config_data["LANDER_IMG_PATH"],
+            [config_data["SCREEN_WIDTH"] / 2, config_data["SCREEN_HEIGHT"] / 2],
+            Vector(0, 0),
+            self.controller,
+        )
         self.game_logic.add_lander(lander)
 
         return lander
@@ -213,6 +229,6 @@ class GameLoop:
     def game_start(self, config_data, sprites):
         # Creates the lander object
         self.lander = self.setup_lander(config_data)
-        self.surface = Surface((config_data['SCREEN_WIDTH'], config_data['SCREEN_HEIGHT']))
+        self.surface = Surface((config_data["SCREEN_WIDTH"], config_data["SCREEN_HEIGHT"]))
         sprites.add(self.lander)
         sprites.add(self.surface)

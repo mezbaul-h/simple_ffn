@@ -27,11 +27,15 @@ class Linear:
 
     def _calculate_momenta(self):
         for i in range(self.output_feature_count):
-            self.biases_momentum[i] = (self.momentum * self.biases_momentum[i]) - (self.learning_rate * self.delta_biases[i])
+            self.biases_momentum[i] = (self.momentum * self.biases_momentum[i]) - (
+                self.learning_rate * self.delta_biases[i]
+            )
 
         for i in range(self.input_feature_count):
             for j in range(self.output_feature_count):
-                self.weights_momentum[i][j] = (self.momentum * self.weights_momentum[i][j]) - (self.learning_rate * self.delta_weights[i][j])
+                self.weights_momentum[i][j] = (self.momentum * self.weights_momentum[i][j]) - (
+                    self.learning_rate * self.delta_weights[i][j]
+                )
 
     def update_biases_and_weights(self):
         self._calculate_momenta()

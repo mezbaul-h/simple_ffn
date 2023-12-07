@@ -1,36 +1,31 @@
-from .data_loader import DataLoader
-from .arg_parser import make_arg_parser
 from . import activations, layers, networks
+from .datasets import Dataset
 
 
 def main():
-    parser = make_arg_parser()
-    args = parser.parse_args()
-    source_filename = args.filename[0]
-
-    learning_rate = 0.0001
+    learning_rate = 0.001
     momentum = 0.9
     num_epochs = 200
 
-    data_loader = DataLoader(
-        source_filename=source_filename,
-    )
-    x_train, y_train, x_test, y_test = data_loader.train_test_split()
+    dataset = Dataset()
+    x_train, x_validation, x_test, y_train, y_validation, y_test = dataset.process()
 
     network = networks.Sequential(
         layers.Linear(2, 2, activation=activations.Sigmoid()),
         layers.Linear(2, 2),
+        feature_scaler=dataset.feature_scaler,
+        output_scaler=dataset.output_scaler,
+        num_epochs=num_epochs,
         learning_rate=learning_rate,
         momentum=momentum,
     )
 
     try:
-        network.train(x_train, y_train, epochs=num_epochs)
+        network.train(x_train, y_train, x_validation, y_validation)
 
         # for x, y in zip(x_train, y_train):
         #     print(x, y, network.predict(x))
-
-        network.save('ffn_checkpoint.json')
     except KeyboardInterrupt:
-        network.save('ffn_checkpoint.json')
         ...
+
+    network.save("ffn_checkpoint.json")

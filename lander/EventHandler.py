@@ -1,8 +1,10 @@
-import pygame, sys
+import sys
+
+import pygame
 from pygame.locals import *
 
-class EventHandler:
 
+class EventHandler:
     def __init__(self, controller):
         self.controller = controller
         self.first_key_press = False
