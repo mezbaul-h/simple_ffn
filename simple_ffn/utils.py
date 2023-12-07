@@ -1,4 +1,5 @@
 import csv
+import math
 import random
 
 
@@ -12,6 +13,51 @@ def _get_zero_weight():
 
 def _make_matrix(row_size, column_size, value_func):
     return [[value_func() for _ in range(column_size)] for _ in range(row_size)]
+
+
+def initialize_xavier_weights(input_size, output_size, random_state=None):
+    """
+    Initialize weights using the Xavier/Glorot Initialization.
+
+    Parameters
+    ----------
+    input_size : int
+        Number of input units.
+    output_size : int
+        Number of output units.
+    random_state : int or None, optional
+        Seed for reproducibility. If specified, the random number generator
+        will be seeded for consistent results. Default is None.
+
+    Returns
+    -------
+    weights : list
+        Initialized weights with shape (input_size, output_size).
+
+    Notes
+    -----
+    Xavier/Glorot Initialization scales the weights based on the number of
+    input and output units to prevent vanishing/exploding gradients during
+    training.
+
+    The formula for standard deviation (std_dev) is:
+        std_dev = sqrt(2 / (input_size + output_size))
+
+    Examples
+    --------
+    >>> a = 256
+    >>> b = 128
+    >>> w = initialize_xavier_weights(a, b, random_state=42)
+    """
+    if random_state is not None:
+        random.seed(random_state)
+
+    variance = 2.0 / (input_size + output_size)
+    std_dev = math.sqrt(variance)
+
+    weights = [[random.gauss(0, std_dev) for _ in range(output_size)] for _ in range(input_size)]
+
+    return weights
 
 
 def make_random_matrix(row_size, column_size):

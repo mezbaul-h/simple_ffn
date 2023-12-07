@@ -1,9 +1,11 @@
 import json
 import time
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 from . import activations, layers
 from .scalers import MinMaxScaler
-from .settings import DATA_ROOT_DIR
 from .utils import get_random_vector_indexes
 
 
@@ -51,6 +53,51 @@ class Sequential:
             if current_layer.activation:
                 current_layer.activation.learning_rate = self.learning_rate
 
+    def evaluate(self, x_test, y_test):
+        total_evaluation_losses = [0.0] * len(y_test[0])
+        avg_evaluation_losses = total_evaluation_losses.copy()
+        num_samples = len(x_test)
+
+        for features, target_outputs in zip(x_test, y_test):
+            # Validation features are not scaled, so that needs to go through
+            # same transformation.
+            scaled_features = self.feature_scaler.transform([features])[0]
+
+            calculated_outputs = self.predict(scaled_features)
+
+            # Target outputs are not scaled as well.
+            scaled_target_outputs = self.output_scaler.transform([target_outputs])[0]
+
+            losses = [prediction - target for prediction, target in zip(calculated_outputs, scaled_target_outputs)]
+
+            for i in range(len(losses)):
+                total_evaluation_losses[i] += losses[i] ** 2
+
+        for i in range(len(total_evaluation_losses)):
+            avg_evaluation_losses[i] = (total_evaluation_losses[i] / num_samples) ** 0.5
+
+        return avg_evaluation_losses
+
+    def save_loss_plot(self, target_filename="loss_plot.png"):
+        training_losses = self.epoch_losses["training"]
+        validation_losses = self.epoch_losses["validation"]
+
+        # Create a line plot
+        plt.figure(figsize=(10, 6))  # 10 * 100 x 6 * 100 pixels
+        sns.lineplot(x=range(1, len(training_losses) + 1), y=training_losses, label="Training Loss")
+        sns.lineplot(x=range(1, len(validation_losses) + 1), y=validation_losses, label="Validation Loss")
+
+        # Set labels and title
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.title("Training and Validation Loss Over Epochs")
+
+        # Show the legend
+        plt.legend()
+
+        # Save the plot to a PNG file
+        plt.savefig(target_filename)
+
     def forward(self, features):
         """
         Feeds forward a set of features.
@@ -90,34 +137,14 @@ class Sequential:
         for layer in self.layers:
             layer.update_biases_and_weights()
 
-    def validate(self, x_validation, y_validation):
-        total_validation_loss = 0.0
-        num_samples = len(x_validation)
-
-        for features, target_outputs in zip(x_validation, y_validation):
-            # Validation features are not scaled, so that needs to go through
-            # same transformation.
-            scaled_features = self.feature_scaler.transform([features])[0]
-
-            calculated_outputs = self.predict(scaled_features)
-
-            # Target outputs are not scaled as well.
-            scaled_target_outputs = self.output_scaler.transform([target_outputs])[0]
-
-            losses = [prediction - target for prediction, target in zip(calculated_outputs, scaled_target_outputs)]
-            total_validation_loss += 0.5 * (sum([loss**2 for loss in losses]) / len(losses))
-
-        validation_loss_avg = total_validation_loss / num_samples
-
-        return validation_loss_avg
-
     def train(self, x_train, y_train, x_validation, y_validation):
         num_samples = len(x_train)
 
         while self.current_epoch < self.num_epochs:
             epoch_start_time = time.time()
 
-            total_training_loss = 0.0
+            total_training_losses = [0.0] * len(y_train[0])
+            avg_training_losses = total_training_losses.copy()
 
             if self.current_epoch:
                 training_index_order = get_random_vector_indexes(len(x_train))
@@ -129,16 +156,24 @@ class Sequential:
                 targets = y_train[index]
 
                 predictions = self.forward(features)
+
                 losses = [prediction - target for prediction, target in zip(predictions, targets)]
-                total_training_loss += 0.5 * (sum([loss**2 for loss in losses]) / len(losses))
+
+                for i in range(len(losses)):
+                    total_training_losses[i] += losses[i] ** 2
 
                 self.backward(losses)
 
-            training_loss_avg = total_training_loss / num_samples
-            validation_loss_avg = self.validate(x_validation, y_validation)
+            for i in range(len(avg_training_losses)):
+                avg_training_losses[i] = (total_training_losses[i] / num_samples) ** 0.5
 
-            self.epoch_losses["training"].append(training_loss_avg)
-            self.epoch_losses["validation"].append(validation_loss_avg)
+            avg_validation_losses = self.evaluate(x_validation, y_validation)
+
+            mean_training_loss = sum(avg_training_losses) / len(avg_training_losses)
+            mean_validation_loss = sum(avg_validation_losses) / len(avg_validation_losses)
+
+            self.epoch_losses["training"].append(mean_training_loss)
+            self.epoch_losses["validation"].append(mean_validation_loss)
 
             try:
                 best_epoch_index = self.epoch_losses["training"].index(min(self.epoch_losses["training"]))
@@ -149,16 +184,13 @@ class Sequential:
 
             print(
                 f"[{self.current_epoch + 1}/{self.num_epochs}] "
-                f"Training loss: {training_loss_avg:.10f} | "
-                f"Validation loss: {validation_loss_avg:.10f} | "
+                f"Training loss: {mean_training_loss:.10f} | "
+                f"Validation loss: {mean_validation_loss:.10f} | "
                 f"Took {seconds_elapsed:.2f} seconds | "
                 f"Best epoch: {best_epoch_index + 1}"
             )
 
             self.current_epoch += 1
-
-    def fit(self, x, y, epochs: int = 1):
-        self.train(x, y, epochs)
 
     def save(self, checkpoint_filename="checkpoint.json"):
         layer_params = []
@@ -242,13 +274,3 @@ class Sequential:
         predictions = self.forward(features)
 
         return predictions
-
-    def get_score(self, x, y):
-        cum_loss = 0
-
-        for features, targets in zip(x, y):
-            predictions = self.forward(features)
-            losses = [prediction - target for prediction, target in zip(predictions, targets)]
-            cum_loss += 0.5 * (sum([loss**2 for loss in losses]) / len(losses))
-
-        return cum_loss

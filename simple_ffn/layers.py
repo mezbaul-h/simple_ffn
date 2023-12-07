@@ -1,11 +1,13 @@
 import typing
 
 from simple_ffn.activations import Sigmoid
-from simple_ffn.utils import make_random_matrix, make_zeroes_matrix
+from simple_ffn.utils import initialize_xavier_weights, make_random_matrix, make_zeroes_matrix
 
 
 class Linear:
-    def __init__(self, input_feature_count: int, output_feature_count: int, activation: Sigmoid = None):
+    def __init__(
+        self, input_feature_count: int, output_feature_count: int, activation: Sigmoid = None, random_state=None
+    ):
         self.input_feature_count = input_feature_count
         self.output_feature_count = output_feature_count
         self.inputs = None
@@ -17,7 +19,7 @@ class Linear:
         self.biases_momentum = make_zeroes_matrix(1, output_feature_count)[0]
         self.delta_biases = make_zeroes_matrix(1, output_feature_count)[0]
 
-        self.weights = make_random_matrix(input_feature_count, output_feature_count)
+        self.weights = initialize_xavier_weights(input_feature_count, output_feature_count, random_state=random_state)
         self.weights_momentum = make_zeroes_matrix(input_feature_count, output_feature_count)
         self.delta_weights = make_zeroes_matrix(input_feature_count, output_feature_count)
 
