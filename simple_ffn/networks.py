@@ -1,4 +1,5 @@
 import json
+import math
 import time
 
 import matplotlib.pyplot as plt
@@ -80,18 +81,38 @@ class Sequential:
 
     def save_loss_plot(self, target_filename="loss_plot.png"):
         training_losses = self.epoch_losses["training"]
+        best_training_epoch_index = self._get_best_epoch(training_losses, self.current_epoch)
         validation_losses = self.epoch_losses["validation"]
+        best_validation_epoch_index = self._get_best_epoch(validation_losses, self.current_epoch)
+        epoch_step_size = max(math.floor(self.num_epochs / 20), 1)
 
         # Create a line plot
         plt.figure(figsize=(10, 6))  # 10 * 100 x 6 * 100 pixels
-        sns.lineplot(x=range(1, len(training_losses) + 1), y=training_losses, label="Training Loss")
-        sns.lineplot(x=range(1, len(validation_losses) + 1), y=validation_losses, label="Validation Loss")
+        training_ax = sns.lineplot(
+            x=range(1, len(training_losses) + 1), y=training_losses, color="red", label="Training Loss"
+        )
+        training_ax.axvline(
+            x=best_training_epoch_index + 1, color="red", label=f"Best Training Epoch: {best_training_epoch_index + 1}"
+        )
+        training_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
+
+        validation_ax = sns.lineplot(
+            x=range(1, len(validation_losses) + 1), y=validation_losses, color="green", label="Validation Loss"
+        )
+        validation_ax.axvline(
+            x=best_validation_epoch_index + 1,
+            color="green",
+            label=f"Best Validation Epoch: {best_validation_epoch_index + 1}",
+        )
+        validation_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
 
         # Set labels and title
         plt.xlabel("Epoch")
         plt.ylabel("Loss")
-        plt.title("Training and Validation Loss Over Epochs")
-
+        plt.title(
+            "Training and Validation Loss Over Epochs\n"
+            f"Learning Rate: {self.learning_rate}, Momentum: {self.momentum}"
+        )
         # Show the legend
         plt.legend()
 
@@ -137,7 +158,14 @@ class Sequential:
         for layer in self.layers:
             layer.update_biases_and_weights()
 
-    def train(self, x_train, y_train, x_validation, y_validation):
+    @staticmethod
+    def _get_best_epoch(epoch_losses, default):
+        try:
+            return epoch_losses.index(min(epoch_losses))
+        except ValueError:
+            return default
+
+    def train(self, x_train, y_train, x_validation, y_validation, log_prefix=None):
         num_samples = len(x_train)
 
         while self.current_epoch < self.num_epochs:
@@ -175,14 +203,12 @@ class Sequential:
             self.epoch_losses["training"].append(mean_training_loss)
             self.epoch_losses["validation"].append(mean_validation_loss)
 
-            try:
-                best_epoch_index = self.epoch_losses["training"].index(min(self.epoch_losses["training"]))
-            except ValueError:
-                best_epoch_index = self.current_epoch
+            best_epoch_index = self._get_best_epoch(self.epoch_losses["training"], self.current_epoch)
 
             seconds_elapsed = time.time() - epoch_start_time
 
             print(
+                f"{log_prefix or ''}"
                 f"[{self.current_epoch + 1}/{self.num_epochs}] "
                 f"Training loss: {mean_training_loss:.10f} | "
                 f"Validation loss: {mean_validation_loss:.10f} | "
