@@ -59,11 +59,17 @@ def main():
     # Take a subset (60%) of the original test set.
     x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.4)
 
+    # param_grid = {
+    #     "epochs": [100],
+    #     "hidden_size": [2, 4, 8, 16],
+    #     "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
+    #     "momentum": [0.5, 0.8, 0.9],
+    # }
     param_grid = {
-        "epochs": [100],
-        "hidden_size": [2, 4, 8, 16],
-        "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
-        "momentum": [0.5, 0.8, 0.9],
+        "epochs": [2],
+        "hidden_size": [2, 4],
+        "learning_rate": [0.0001, 0.001],
+        "momentum": [0.9],
     }
     param_combinations = itertools.product(*param_grid.values())
     param_dicts = [dict(zip(param_grid.keys(), param_combination)) for param_combination in param_combinations]
@@ -85,8 +91,8 @@ def main():
         grid_search_results = pool.map(partial_perform_search, enumerate(param_dicts))
 
     for item in grid_search_results:
-        if grid_search_results["mean_evaluation_loss"] < best_score:
-            best_score = grid_search_results["mean_evaluation_loss"]
+        if item["mean_evaluation_loss"] < best_score:
+            best_score = item["mean_evaluation_loss"]
             best_params = item
 
     with open("grid_search_results.json", "w") as f:
