@@ -36,7 +36,7 @@ def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y
         output_scaler=dataset.output_scaler,
     )
 
-    network.train(x_train, y_train, x_validation, y_validation, log_prefix=f"[Grid No. {combination_index + 1}] ")
+    network.train(x_train, y_train, x_validation, y_validation, log_prefix=f"[{combination_index + 1}] ")
 
     avg_evaluation_losses = network.evaluate(x_test, y_test)
     mean_evaluation_loss = sum(avg_evaluation_losses) / len(avg_evaluation_losses)
@@ -45,13 +45,14 @@ def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y
 
     return {
         **param_dict,
+        "id": param_set_id,
         "mean_evaluation_loss": mean_evaluation_loss,
     }
 
 
 def main():
     best_score = float("inf")
-    best_params = None
+    best_param_set_id = None
 
     dataset = Dataset()
     x_train, x_validation, x_test, y_train, y_validation, y_test = dataset.process()
@@ -59,17 +60,11 @@ def main():
     # Take a subset (60%) of the original test set.
     x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.4)
 
-    # param_grid = {
-    #     "epochs": [100],
-    #     "hidden_size": [2, 4, 8, 16],
-    #     "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
-    #     "momentum": [0.5, 0.8, 0.9],
-    # }
     param_grid = {
-        "epochs": [2],
-        "hidden_size": [2, 4],
-        "learning_rate": [0.0001, 0.001],
-        "momentum": [0.9],
+        "epochs": [100],
+        "hidden_size": [2, 4, 8, 16],
+        "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
+        "momentum": [0.5, 0.8, 0.9],
     }
     param_combinations = itertools.product(*param_grid.values())
     param_dicts = [dict(zip(param_grid.keys(), param_combination)) for param_combination in param_combinations]
@@ -93,14 +88,14 @@ def main():
     for item in grid_search_results:
         if item["mean_evaluation_loss"] < best_score:
             best_score = item["mean_evaluation_loss"]
-            best_params = item
+            best_param_set_id = item["id"]
 
     with open("grid_search_results.json", "w") as f:
         f.write(
             json.dumps(
                 {
                     "grid_search_results": grid_search_results,
-                    "best_params": best_params,
+                    "best_param_set_id": best_param_set_id,
                 },
                 indent=4,
             )
