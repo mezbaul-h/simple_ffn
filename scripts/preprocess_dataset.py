@@ -25,7 +25,7 @@ def write_dataset_csv(csv_filename, features, outputs):
 
 def main():
     x, y = read_dataset_csv(SOURCE_DATASET_PATH, criterion=lambda row: all([float(column) != 0 for column in row]))
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42, test_size=0.3)
     x_test, x_validation, y_test, y_validation = train_test_split(x_test, y_test, random_state=42, test_size=0.1)
 
     feature_scaler = MinMaxScaler(x_train)
