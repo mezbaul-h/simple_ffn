@@ -1,0 +1,485 @@
+{
+    "grid_search_results": [
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.0001,
+            "momentum": 0.5,
+            "id": 0,
+            "mean_evaluation_loss": 0.10056495316378257
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.0001,
+            "momentum": 0.8,
+            "id": 1,
+            "mean_evaluation_loss": 0.09456965697607997
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.0001,
+            "momentum": 0.9,
+            "id": 2,
+            "mean_evaluation_loss": 0.08801478900569665
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.001,
+            "momentum": 0.5,
+            "id": 3,
+            "mean_evaluation_loss": 0.08608584979642558
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.001,
+            "momentum": 0.8,
+            "id": 4,
+            "mean_evaluation_loss": 0.08608404108051529
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.001,
+            "momentum": 0.9,
+            "id": 5,
+            "mean_evaluation_loss": 0.08606176958525022
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.01,
+            "momentum": 0.5,
+            "id": 6,
+            "mean_evaluation_loss": 0.08710907680265617
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.01,
+            "momentum": 0.8,
+            "id": 7,
+            "mean_evaluation_loss": 0.08722494865560754
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.01,
+            "momentum": 0.9,
+            "id": 8,
+            "mean_evaluation_loss": 0.10303897305289217
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.1,
+            "momentum": 0.5,
+            "id": 9,
+            "mean_evaluation_loss": 0.09797015408726567
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.1,
+            "momentum": 0.8,
+            "id": 10,
+            "mean_evaluation_loss": 0.09496421671428384
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.1,
+            "momentum": 0.9,
+            "id": 11,
+            "mean_evaluation_loss": 0.10583583197710342
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.2,
+            "momentum": 0.5,
+            "id": 12,
+            "mean_evaluation_loss": 0.09128844398376669
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.2,
+            "momentum": 0.8,
+            "id": 13,
+            "mean_evaluation_loss": 0.18507336725947124
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 2,
+            "learning_rate": 0.2,
+            "momentum": 0.9,
+            "id": 14,
+            "mean_evaluation_loss": 0.21082064167308143
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.0001,
+            "momentum": 0.5,
+            "id": 15,
+            "mean_evaluation_loss": 0.09948614664608904
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.0001,
+            "momentum": 0.8,
+            "id": 16,
+            "mean_evaluation_loss": 0.09406600306418449
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.0001,
+            "momentum": 0.9,
+            "id": 17,
+            "mean_evaluation_loss": 0.08764239957059752
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.001,
+            "momentum": 0.5,
+            "id": 18,
+            "mean_evaluation_loss": 0.0854635356233768
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.001,
+            "momentum": 0.8,
+            "id": 19,
+            "mean_evaluation_loss": 0.08471576685454972
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.001,
+            "momentum": 0.9,
+            "id": 20,
+            "mean_evaluation_loss": 0.08499861346152268
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.01,
+            "momentum": 0.5,
+            "id": 21,
+            "mean_evaluation_loss": 0.08730261924789176
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.01,
+            "momentum": 0.8,
+            "id": 22,
+            "mean_evaluation_loss": 0.08737295870833078
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.01,
+            "momentum": 0.9,
+            "id": 23,
+            "mean_evaluation_loss": 0.08424007480556142
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.1,
+            "momentum": 0.5,
+            "id": 24,
+            "mean_evaluation_loss": 0.092797792282448
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.1,
+            "momentum": 0.8,
+            "id": 25,
+            "mean_evaluation_loss": 0.11994462293571209
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.1,
+            "momentum": 0.9,
+            "id": 26,
+            "mean_evaluation_loss": 0.10085363848834317
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.2,
+            "momentum": 0.5,
+            "id": 27,
+            "mean_evaluation_loss": 0.10088516034440075
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.2,
+            "momentum": 0.8,
+            "id": 28,
+            "mean_evaluation_loss": 0.09710767436561346
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 4,
+            "learning_rate": 0.2,
+            "momentum": 0.9,
+            "id": 29,
+            "mean_evaluation_loss": 0.11376368099329134
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.0001,
+            "momentum": 0.5,
+            "id": 30,
+            "mean_evaluation_loss": 0.10311647025413781
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.0001,
+            "momentum": 0.8,
+            "id": 31,
+            "mean_evaluation_loss": 0.09340404014226486
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.0001,
+            "momentum": 0.9,
+            "id": 32,
+            "mean_evaluation_loss": 0.08772339271912347
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.001,
+            "momentum": 0.5,
+            "id": 33,
+            "mean_evaluation_loss": 0.08597002033467488
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.001,
+            "momentum": 0.8,
+            "id": 34,
+            "mean_evaluation_loss": 0.08476169538106695
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.001,
+            "momentum": 0.9,
+            "id": 35,
+            "mean_evaluation_loss": 0.08307578129553661
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.01,
+            "momentum": 0.5,
+            "id": 36,
+            "mean_evaluation_loss": 0.08299811157435985
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.01,
+            "momentum": 0.8,
+            "id": 37,
+            "mean_evaluation_loss": 0.0831997706333777
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.01,
+            "momentum": 0.9,
+            "id": 38,
+            "mean_evaluation_loss": 0.08450049078781668
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.1,
+            "momentum": 0.5,
+            "id": 39,
+            "mean_evaluation_loss": 0.0847855907687715
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.1,
+            "momentum": 0.8,
+            "id": 40,
+            "mean_evaluation_loss": 0.10105485413449397
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.1,
+            "momentum": 0.9,
+            "id": 41,
+            "mean_evaluation_loss": 0.12471801886439327
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.2,
+            "momentum": 0.5,
+            "id": 42,
+            "mean_evaluation_loss": 0.08775593806015344
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.2,
+            "momentum": 0.8,
+            "id": 43,
+            "mean_evaluation_loss": 0.09019867118471164
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 8,
+            "learning_rate": 0.2,
+            "momentum": 0.9,
+            "id": 44,
+            "mean_evaluation_loss": 0.13726611725891275
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.0001,
+            "momentum": 0.5,
+            "id": 45,
+            "mean_evaluation_loss": 0.1022279600086049
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.0001,
+            "momentum": 0.8,
+            "id": 46,
+            "mean_evaluation_loss": 0.09860821040736266
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.0001,
+            "momentum": 0.9,
+            "id": 47,
+            "mean_evaluation_loss": 0.08886300791590676
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.001,
+            "momentum": 0.5,
+            "id": 48,
+            "mean_evaluation_loss": 0.08539582377018683
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.001,
+            "momentum": 0.8,
+            "id": 49,
+            "mean_evaluation_loss": 0.08373418151136902
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.001,
+            "momentum": 0.9,
+            "id": 50,
+            "mean_evaluation_loss": 0.08440320615387312
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.01,
+            "momentum": 0.5,
+            "id": 51,
+            "mean_evaluation_loss": 0.08570046744355157
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.01,
+            "momentum": 0.8,
+            "id": 52,
+            "mean_evaluation_loss": 0.08582551155189752
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.01,
+            "momentum": 0.9,
+            "id": 53,
+            "mean_evaluation_loss": 0.08614807613392553
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.1,
+            "momentum": 0.5,
+            "id": 54,
+            "mean_evaluation_loss": 0.08889678896090555
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.1,
+            "momentum": 0.8,
+            "id": 55,
+            "mean_evaluation_loss": 0.08875672190019351
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.1,
+            "momentum": 0.9,
+            "id": 56,
+            "mean_evaluation_loss": 0.1098042982828049
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.2,
+            "momentum": 0.5,
+            "id": 57,
+            "mean_evaluation_loss": 0.08654003782193911
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.2,
+            "momentum": 0.8,
+            "id": 58,
+            "mean_evaluation_loss": 0.09991747660511519
+        },
+        {
+            "epochs": 500,
+            "hidden_size": 16,
+            "learning_rate": 0.2,
+            "momentum": 0.9,
+            "id": 59,
+            "mean_evaluation_loss": 0.12057272894066157
+        }
+    ],
+    "best_param_set_id": 36
+}
