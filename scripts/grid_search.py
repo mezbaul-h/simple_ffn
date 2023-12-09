@@ -55,7 +55,7 @@ def main():
     # x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.3)
 
     param_grid = {
-        "epochs": [100],
+        "epochs": [500],
         "hidden_size": [2, 4, 8, 16],
         "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
         "momentum": [0.5, 0.8, 0.9],
