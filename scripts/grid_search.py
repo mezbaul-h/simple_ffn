@@ -20,8 +20,8 @@ def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y
     combination_index, param_dict = indexed_param_dict
     hidden_size = param_dict["hidden_size"]
     network = networks.Sequential(
-        layers.Linear(2, hidden_size, activation=activations.Sigmoid()),
-        layers.Linear(hidden_size, 2, activation=None),
+        layers.Linear(2, hidden_size, activation=activations.Sigmoid(), random_state=42),
+        layers.Linear(hidden_size, 2, random_state=43),
         feature_scaler=dataset.feature_scaler,
         learning_rate=param_dict["learning_rate"],
         momentum=param_dict["momentum"],
@@ -30,16 +30,15 @@ def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y
     )
 
     network.train(x_train, y_train, x_validation, y_validation, log_prefix=f"[{combination_index + 1}] ")
-
-    avg_evaluation_losses = network.evaluate(x_test, y_test)
-    mean_evaluation_loss = sum(avg_evaluation_losses) / len(avg_evaluation_losses)
-
     network.save_loss_plot(f"{combination_index}_loss_plot.png")
 
+    avg_evaluation_losses = network.evaluate(x_test, y_test, use_best_layer_params=True)
+    mean_evaluation_loss = sum(avg_evaluation_losses) / len(avg_evaluation_losses)
+
     return {
-        **param_dict,
         "id": combination_index,
         "mean_evaluation_loss": mean_evaluation_loss,
+        "param_dict": param_dict,
     }
 
 
@@ -55,10 +54,10 @@ def main():
     # x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.3)
 
     param_grid = {
-        "epochs": [500],
+        "epochs": [300],
         "hidden_size": [2, 4, 8, 16],
-        "learning_rate": [0.0001, 0.001, 0.01, 0.1, 0.2],
-        "momentum": [0.5, 0.8, 0.9],
+        "learning_rate": [0.00001, 0.0001, 0.001, 0.01, 0.1],
+        "momentum": [0.5, 0.9, 0.99],
     }
     param_combinations = itertools.product(*param_grid.values())
     param_dicts = [dict(zip(param_grid.keys(), param_combination)) for param_combination in param_combinations]

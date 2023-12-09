@@ -63,3 +63,20 @@ class Linear:
             self.outputs = self.activation.forward(self.outputs)
 
         return self.outputs
+
+    def load_params(self, param_dict):
+        self.biases = param_dict["biases"]
+        self.delta_biases = param_dict["delta_biases"]
+        self.delta_weights = param_dict["delta_weights"]
+        self.input_feature_count, self.output_feature_count = param_dict["layer_dimensions"]
+        self.weights = param_dict["weights"]
+
+    def get_params(self):
+        return {
+            "sigmoid_activation": self.activation is not None,
+            "layer_dimensions": (self.input_feature_count, self.output_feature_count),
+            "weights": self.weights,
+            "delta_weights": self.delta_weights,
+            "biases": self.biases,
+            "delta_biases": self.delta_biases,
+        }

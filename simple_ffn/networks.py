@@ -1,9 +1,10 @@
 import json
-import math
 import time
 
-import matplotlib.pyplot as plt
-import seaborn as sns
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = None
 
 from . import activations, layers
 from .scalers import MinMaxScaler
@@ -30,6 +31,8 @@ class Sequential:
             "training": [],
             "validation": [],
         }
+        self.layer_params_at_lowest_training_epoch = [layer.get_params() for layer in self.layers]
+        self.layer_params_at_lowest_validation_epoch = [layer.get_params() for layer in self.layers]
 
         # self.layers[0].weights = [
         #     [0.91300363, 0.94700325, 0.75501112, 0.76566442],
@@ -60,7 +63,18 @@ class Sequential:
             if current_layer.activation:
                 current_layer.activation.learning_rate = self.learning_rate
 
-    def evaluate(self, x_test, y_test):
+    def evaluate(self, x_test, y_test, use_best_layer_params=False):
+        old_layer_params = None
+
+        # If using best layer params, record current layer states and load the
+        # best states.
+        if use_best_layer_params and self.layer_params_at_lowest_validation_epoch:
+            old_layer_params = []
+
+            for i, layer in enumerate(self.layers):
+                old_layer_params.append(layer.get_params())
+                layer.load_params(self.layer_params_at_lowest_validation_epoch[i])
+
         total_evaluation_losses = [0.0] * len(y_test[0])
         avg_evaluation_losses = total_evaluation_losses.copy()
         num_samples = len(x_test)
@@ -83,34 +97,36 @@ class Sequential:
         for i in range(len(total_evaluation_losses)):
             avg_evaluation_losses[i] = (total_evaluation_losses[i] / num_samples) ** 0.5
 
+        # If using best layer params, reload old layer states.
+        if old_layer_params:
+            for i, layer in enumerate(self.layers):
+                layer.load_params(old_layer_params[i])
+
         return avg_evaluation_losses
 
     def save_loss_plot(self, target_filename="loss_plot.png"):
+        # Don't try to plot if library is not available.
+        if not plt:
+            return
+
         training_losses = self.epoch_losses["training"]
-        best_training_epoch_index = self._get_best_epoch(training_losses, self.current_epoch)
+        best_training_epoch_index = self.get_best_epoch(training_losses, self.current_epoch)
         validation_losses = self.epoch_losses["validation"]
-        best_validation_epoch_index = self._get_best_epoch(validation_losses, self.current_epoch)
-        # epoch_step_size = max(math.floor(self.num_epochs / 20), 1)
+        best_validation_epoch_index = self.get_best_epoch(validation_losses, self.current_epoch)
 
         # Create a line plot
         plt.figure(figsize=(10, 6))  # 10 * 100 x 6 * 100 pixels
-        training_ax = sns.lineplot(
-            x=range(1, len(training_losses) + 1), y=training_losses, color="red", label="Training Loss"
-        )
-        training_ax.axvline(
+        plt.plot(range(1, len(training_losses) + 1), training_losses, color="red", label="Training Loss")
+        plt.axvline(
             x=best_training_epoch_index + 1, color="red", label=f"Best Training Epoch: {best_training_epoch_index + 1}"
         )
-        # training_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
 
-        validation_ax = sns.lineplot(
-            x=range(1, len(validation_losses) + 1), y=validation_losses, color="green", label="Validation Loss"
-        )
-        validation_ax.axvline(
+        plt.plot(range(1, len(validation_losses) + 1), validation_losses, color="green", label="Validation Loss")
+        plt.axvline(
             x=best_validation_epoch_index + 1,
             color="green",
             label=f"Best Validation Epoch: {best_validation_epoch_index + 1}",
         )
-        # validation_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
 
         # Set labels and title
         plt.xlabel("Epoch")
@@ -170,7 +186,7 @@ class Sequential:
             layer.update_biases_and_weights()
 
     @staticmethod
-    def _get_best_epoch(epoch_losses, default):
+    def get_best_epoch(epoch_losses, default):
         try:
             return epoch_losses.index(min(epoch_losses))
         except ValueError:
@@ -214,54 +230,46 @@ class Sequential:
             self.epoch_losses["training"].append(mean_training_loss)
             self.epoch_losses["validation"].append(mean_validation_loss)
 
-            best_epoch_index = self._get_best_epoch(self.epoch_losses["training"], self.current_epoch)
+            best_training_epoch_index = self.get_best_epoch(self.epoch_losses["training"], self.current_epoch)
+
+            # Save layer parameters (weights, biases) if current epoch is best epoch.
+            if best_training_epoch_index == self.current_epoch:
+                self.layer_params_at_lowest_training_epoch = [layer.get_params() for layer in self.layers]
+
+            best_validation_epoch_index = self.get_best_epoch(self.epoch_losses["validation"], self.current_epoch)
+
+            if best_validation_epoch_index == self.current_epoch:
+                self.layer_params_at_lowest_validation_epoch = [layer.get_params() for layer in self.layers]
 
             seconds_elapsed = time.time() - epoch_start_time
 
             print(
                 f"{log_prefix or ''}"
                 f"[{self.current_epoch + 1}/{self.num_epochs}] "
-                f"Training loss: {mean_training_loss:.10f} | "
-                f"Validation loss: {mean_validation_loss:.10f} | "
-                f"Took {seconds_elapsed:.2f} seconds | "
-                f"Best epoch: {best_epoch_index + 1}"
+                f"Losses (T/V): {mean_training_loss:.10f}/{mean_validation_loss:.10f} | "
+                f"Best Epochs (T/V): {best_training_epoch_index + 1}/{best_validation_epoch_index + 1} "
+                f"({seconds_elapsed:.2f}s)"
             )
 
             self.current_epoch += 1
 
+    def get_params(self):
+        return {
+            "current_epoch": self.current_epoch,
+            "epoch_losses": self.epoch_losses,
+            "feature_scaler_params": self.feature_scaler.get_params(),
+            "layer_params": [layer.get_params() for layer in self.layers],
+            "layer_params_at_lowest_training_epoch": self.layer_params_at_lowest_training_epoch,
+            "layer_params_at_lowest_validation_epoch": self.layer_params_at_lowest_validation_epoch,
+            "learning_rate": self.learning_rate,
+            "momentum": self.momentum,
+            "num_epochs": self.num_epochs,
+            "output_scaler_params": self.output_scaler.get_params(),
+        }
+
     def save(self, checkpoint_filename="checkpoint.json"):
-        layer_params = []
-
-        for i in range(len(self.layers)):
-            current_layer = self.layers[i]
-
-            layer_params.append(
-                {
-                    "sigmoid_activation": current_layer.activation is not None,
-                    "layer_dimensions": (current_layer.input_feature_count, current_layer.output_feature_count),
-                    "weights": current_layer.weights,
-                    "delta_weights": current_layer.delta_weights,
-                    "biases": current_layer.biases,
-                    "delta_biases": current_layer.delta_biases,
-                }
-            )
-
         with open(checkpoint_filename, "w+") as f:
-            f.write(
-                json.dumps(
-                    {
-                        "current_epoch": self.current_epoch,
-                        "epoch_losses": self.epoch_losses,
-                        "feature_scaler_params": self.feature_scaler.get_params(),
-                        "layer_params": layer_params,
-                        "learning_rate": self.learning_rate,
-                        "momentum": self.momentum,
-                        "num_epochs": self.num_epochs,
-                        "output_scaler_params": self.output_scaler.get_params(),
-                    },
-                    indent=4,
-                )
-            )
+            f.write(json.dumps(self.get_params(), indent=4))
 
     @classmethod
     def load(cls, checkpoint_filename):
@@ -304,6 +312,8 @@ class Sequential:
 
         instance.current_epoch = checkpoint_data["current_epoch"]
         instance.epoch_losses = checkpoint_data["epoch_losses"]
+        instance.layer_params_at_lowest_training_epoch = checkpoint_data["layer_params_at_lowest_training_epoch"]
+        instance.layer_params_at_lowest_validation_epoch = checkpoint_data["layer_params_at_lowest_validation_epoch"]
 
         return instance
 
