@@ -8,16 +8,14 @@ class Sigmoid:
         self.outputs = None
 
     @staticmethod
-    def calculate_sigmoid(value):
-        # if value < 0:
-        #     return 1 - (1 / 1 + math.exp(value))
+    def activate(value):
         try:
             return 1 / (1 + math.exp(-value))
         except OverflowError:
             return 1 - (1 / 1 + math.exp(value))
 
     @staticmethod
-    def calculate_sigmoid_derivative(value):
+    def derivative(value):
         return value * (1 - value)
 
     def forward(self, x):
@@ -25,6 +23,6 @@ class Sigmoid:
         self.outputs = []
 
         for item in x:
-            self.outputs.append(self.calculate_sigmoid(item))
+            self.outputs.append(self.activate(item))
 
         return self.outputs

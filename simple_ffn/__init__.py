@@ -14,11 +14,11 @@ def main():
     else:
         learning_rate = 0.001
         momentum = 0.9
-        num_epochs = 10
+        num_epochs = 1000
 
         network = networks.Sequential(
-            layers.Linear(2, 2, activation=activations.Sigmoid(), random_state=42),
-            layers.Linear(2, 2, random_state=43),
+            layers.Linear(2, 6, activation=activations.Sigmoid(), random_state=42),
+            layers.Linear(6, 2, random_state=43),
             feature_scaler=dataset.feature_scaler,
             learning_rate=learning_rate,
             momentum=momentum,
@@ -34,5 +34,5 @@ def main():
     except KeyboardInterrupt:
         ...
 
-    # network.save("ffn_checkpoint.json")
+    network.save("ffn_checkpoint.json")
     network.save_loss_plot()

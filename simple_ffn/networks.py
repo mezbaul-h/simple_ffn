@@ -36,6 +36,12 @@ class Sequential:
         #     [0.85213534, 0.88962154, 0.8392711,  0.60951791],
         # ]
         # self.layers[1].weights = [
+        #     [0.91300363, 0.94700325],
+        #     [0.75501112, 0.76566442],
+        #     [0.85213534, 0.88962154],
+        #     [0.8392711, 0.60951791],
+        # ]
+        # self.layers[1].weights = [
         #     [0.33312217],
         #     [0.10090748],
         #     [0.47717155],
@@ -84,7 +90,7 @@ class Sequential:
         best_training_epoch_index = self._get_best_epoch(training_losses, self.current_epoch)
         validation_losses = self.epoch_losses["validation"]
         best_validation_epoch_index = self._get_best_epoch(validation_losses, self.current_epoch)
-        epoch_step_size = max(math.floor(self.num_epochs / 20), 1)
+        # epoch_step_size = max(math.floor(self.num_epochs / 20), 1)
 
         # Create a line plot
         plt.figure(figsize=(10, 6))  # 10 * 100 x 6 * 100 pixels
@@ -94,7 +100,7 @@ class Sequential:
         training_ax.axvline(
             x=best_training_epoch_index + 1, color="red", label=f"Best Training Epoch: {best_training_epoch_index + 1}"
         )
-        training_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
+        # training_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
 
         validation_ax = sns.lineplot(
             x=range(1, len(validation_losses) + 1), y=validation_losses, color="green", label="Validation Loss"
@@ -104,7 +110,7 @@ class Sequential:
             color="green",
             label=f"Best Validation Epoch: {best_validation_epoch_index + 1}",
         )
-        validation_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
+        # validation_ax.set_xticks(list(range(1, len(training_losses) + 1, epoch_step_size)))
 
         # Set labels and title
         plt.xlabel("Epoch")
@@ -136,14 +142,19 @@ class Sequential:
             layer_gradients = []
 
             for i in range(current_layer.input_feature_count):
+                if current_layer.previous_layer:
+                    layer_gradients.append(
+                        sum(
+                            [
+                                losses[k] * current_layer.weights[i][k]
+                                for k in range(current_layer.output_feature_count)
+                            ]
+                        )
+                        * current_layer.previous_layer.activation.derivative(current_layer.inputs[i])
+                    )
+
                 for j in range(current_layer.output_feature_count):
                     if not current_layer.next_layer:  # output layer
-                        layer_gradients.append(
-                            losses[0]
-                            * current_layer.weights[i][j]
-                            * activations.Sigmoid.calculate_sigmoid_derivative(current_layer.inputs[i])
-                        )
-
                         delta_bias = losses[j]
                         delta_weight = current_layer.inputs[i] * losses[j]
                     else:

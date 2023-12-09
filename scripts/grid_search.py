@@ -1,9 +1,8 @@
 import functools
-import operator
+import itertools
+import json
 import os
-import random
 import sys
-from functools import reduce
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -11,20 +10,14 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 sys.path.append(str(PROJECT_ROOT))
 
-import itertools
-import json
-import uuid
-
 from simple_ffn import activations, layers, networks
 from simple_ffn.datasets import Dataset
-from simple_ffn.utils import train_test_split
 
 _NUM_CPU_THREADS = os.cpu_count() or 1
 
 
 def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y_train, y_validation, y_test):
     combination_index, param_dict = indexed_param_dict
-    param_set_id = uuid.uuid4().hex
     hidden_size = param_dict["hidden_size"]
     network = networks.Sequential(
         layers.Linear(2, hidden_size, activation=activations.Sigmoid()),
@@ -41,11 +34,11 @@ def perform_search(indexed_param_dict, dataset, x_train, x_validation, x_test, y
     avg_evaluation_losses = network.evaluate(x_test, y_test)
     mean_evaluation_loss = sum(avg_evaluation_losses) / len(avg_evaluation_losses)
 
-    network.save_loss_plot(f"{param_set_id}_loss_plot.png")
+    network.save_loss_plot(f"{combination_index}_loss_plot.png")
 
     return {
         **param_dict,
-        "id": param_set_id,
+        "id": combination_index,
         "mean_evaluation_loss": mean_evaluation_loss,
     }
 
@@ -57,8 +50,9 @@ def main():
     dataset = Dataset()
     x_train, x_validation, x_test, y_train, y_validation, y_test = dataset.process()
 
-    # Take a subset (60%) of the original test set.
-    x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.4)
+    # Take a subset (70%) of the original test set.
+    # NOTE: skipping for now
+    # x_train, x_residue, y_train, y_residue = train_test_split(x_train, y_train, random_state=42, test_size=0.3)
 
     param_grid = {
         "epochs": [100],
@@ -80,7 +74,7 @@ def main():
         y_test=y_test,
     )
 
-    print(f"Starting grid search with a pool of {_NUM_CPU_THREADS}")
+    print(f"Worker Count: {_NUM_CPU_THREADS}")
 
     with Pool(_NUM_CPU_THREADS) as pool:
         grid_search_results = pool.map(partial_perform_search, enumerate(param_dicts))

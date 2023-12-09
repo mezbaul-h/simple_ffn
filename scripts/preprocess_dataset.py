@@ -11,7 +11,7 @@ from simple_ffn.scalers import MinMaxScaler
 from simple_ffn.utils import read_dataset_csv, train_test_split
 
 DATASET_FILE_PREFIX = "ce889_dataCollection"
-SOURCE_DATASET_PATH = PROJECT_ROOT / "lander" / f"{DATASET_FILE_PREFIX}.csv"
+SOURCE_DATASET_PATH = PROJECT_ROOT / "data" / f"{DATASET_FILE_PREFIX}.csv"
 TARGET_DIR = PROJECT_ROOT / "data"
 
 
