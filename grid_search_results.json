@@ -1,0 +1,605 @@
+{
+    "grid_search_results": [
+        {
+            "id": 0,
+            "mean_evaluation_loss": 0.10393634221207124,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 1e-05,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 1,
+            "mean_evaluation_loss": 0.10212288993403812,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 1e-05,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 2,
+            "mean_evaluation_loss": 0.08885009251968157,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 1e-05,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 3,
+            "mean_evaluation_loss": 0.10171902236121212,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.0001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 4,
+            "mean_evaluation_loss": 0.08884250625836893,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.0001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 5,
+            "mean_evaluation_loss": 0.08476176673711475,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.0001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 6,
+            "mean_evaluation_loss": 0.08475053945110414,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 7,
+            "mean_evaluation_loss": 0.08492751055767539,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 8,
+            "mean_evaluation_loss": 0.08607194388235616,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 9,
+            "mean_evaluation_loss": 0.08568617952714225,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.01,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 10,
+            "mean_evaluation_loss": 0.08640665644314452,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.01,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 11,
+            "mean_evaluation_loss": 0.11154909794422241,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.01,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 12,
+            "mean_evaluation_loss": 0.09938757745701048,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.1,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 13,
+            "mean_evaluation_loss": 0.16377404152693742,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.1,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 14,
+            "mean_evaluation_loss": 0.29423147033541325,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 2,
+                "learning_rate": 0.1,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 15,
+            "mean_evaluation_loss": 0.10265293872143047,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 1e-05,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 16,
+            "mean_evaluation_loss": 0.10232928576974645,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 1e-05,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 17,
+            "mean_evaluation_loss": 0.08752395538112342,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 1e-05,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 18,
+            "mean_evaluation_loss": 0.10206534019658442,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.0001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 19,
+            "mean_evaluation_loss": 0.08756632901256825,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.0001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 20,
+            "mean_evaluation_loss": 0.08330929481063526,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.0001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 21,
+            "mean_evaluation_loss": 0.08469889597872203,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 22,
+            "mean_evaluation_loss": 0.08356822384603016,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 23,
+            "mean_evaluation_loss": 0.08464419551054306,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 24,
+            "mean_evaluation_loss": 0.08297070104443517,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.01,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 25,
+            "mean_evaluation_loss": 0.08481728671626318,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.01,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 26,
+            "mean_evaluation_loss": 0.10362001667868831,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.01,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 27,
+            "mean_evaluation_loss": 0.09512147336809132,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.1,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 28,
+            "mean_evaluation_loss": 0.15689911754742142,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.1,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 29,
+            "mean_evaluation_loss": 0.2942316376455275,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 4,
+                "learning_rate": 0.1,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 30,
+            "mean_evaluation_loss": 0.10252035419294087,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 1e-05,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 31,
+            "mean_evaluation_loss": 0.10229300347861867,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 1e-05,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 32,
+            "mean_evaluation_loss": 0.08629503176456088,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 1e-05,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 33,
+            "mean_evaluation_loss": 0.10184663902115518,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.0001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 34,
+            "mean_evaluation_loss": 0.08636391708235039,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.0001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 35,
+            "mean_evaluation_loss": 0.08318851744496727,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.0001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 36,
+            "mean_evaluation_loss": 0.08405227861385747,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 37,
+            "mean_evaluation_loss": 0.08202555027441802,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 38,
+            "mean_evaluation_loss": 0.08167283777079923,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 39,
+            "mean_evaluation_loss": 0.08318121914921062,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.01,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 40,
+            "mean_evaluation_loss": 0.0813359237912329,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.01,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 41,
+            "mean_evaluation_loss": 0.08971555608202164,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.01,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 42,
+            "mean_evaluation_loss": 0.09194376247360067,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.1,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 43,
+            "mean_evaluation_loss": 0.15135932025238408,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.1,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 44,
+            "mean_evaluation_loss": 0.294233191094183,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 8,
+                "learning_rate": 0.1,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 45,
+            "mean_evaluation_loss": 0.10254016183225889,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 1e-05,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 46,
+            "mean_evaluation_loss": 0.10245023850061812,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 1e-05,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 47,
+            "mean_evaluation_loss": 0.09086752688670252,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 1e-05,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 48,
+            "mean_evaluation_loss": 0.10226116015845763,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.0001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 49,
+            "mean_evaluation_loss": 0.09088357539440199,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.0001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 50,
+            "mean_evaluation_loss": 0.08158982876069433,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.0001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 51,
+            "mean_evaluation_loss": 0.08480238092130102,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.001,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 52,
+            "mean_evaluation_loss": 0.08186714714284596,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.001,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 53,
+            "mean_evaluation_loss": 0.08173249609203673,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.001,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 54,
+            "mean_evaluation_loss": 0.08153325663318006,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.01,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 55,
+            "mean_evaluation_loss": 0.08131549034296082,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.01,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 56,
+            "mean_evaluation_loss": 0.08345186189726397,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.01,
+                "momentum": 0.99
+            }
+        },
+        {
+            "id": 57,
+            "mean_evaluation_loss": 0.09127886666482182,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.1,
+                "momentum": 0.5
+            }
+        },
+        {
+            "id": 58,
+            "mean_evaluation_loss": 0.13341690763280403,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.1,
+                "momentum": 0.9
+            }
+        },
+        {
+            "id": 59,
+            "mean_evaluation_loss": 0.294231934712976,
+            "param_dict": {
+                "epochs": 300,
+                "hidden_size": 16,
+                "learning_rate": 0.1,
+                "momentum": 0.99
+            }
+        }
+    ],
+    "best_param_set_id": 55
+}
