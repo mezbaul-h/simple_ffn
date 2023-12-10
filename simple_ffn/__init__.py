@@ -1,3 +1,8 @@
+"""
+Simple FFN Package
+
+This package provides a simple feedforward neural network implementation.
+"""
 from pathlib import Path
 
 from . import activations, layers, networks
@@ -7,9 +12,18 @@ from .settings import DEFAULT_CHECKPOINT_FILENAME
 
 
 def main():
+    """
+    Entry point for the main script.
+
+    Parses command-line arguments, initializes a neural network, processes the dataset,
+    and either trains a new network or resumes training from a checkpoint.
+
+    Prints CLI arguments and saves the trained network and loss plot.
+    """
     parser = make_main_arg_parser()
     args = parser.parse_args()
 
+    # Extract CLI arguments.
     hidden_size = args.hidden_size[0]
     learning_rate = args.learning_rate[0]
     momentum = args.momentum[0]
@@ -26,7 +40,9 @@ def main():
     dataset = Dataset()
     x_train, x_validation, x_test, y_train, y_validation, y_test = dataset.process()
 
-    # If checkpoint exists, resume from that.
+    # Initialize or load the neural network:
+    # If a checkpoint file exists, load the network from the checkpoint;
+    # otherwise, initialize a new network with specified architecture and hyperparameters.
     if Path(DEFAULT_CHECKPOINT_FILENAME).is_file():
         network = networks.Sequential.load(DEFAULT_CHECKPOINT_FILENAME)
     else:
@@ -45,5 +61,6 @@ def main():
     except KeyboardInterrupt:
         ...
 
+    # Save network and loss plot.
     network.save("ffn_checkpoint.json")
     network.save_loss_plot()

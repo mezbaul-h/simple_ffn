@@ -1,15 +1,14 @@
+"""
+Scaler Module
+
+This module provides classes for scaling numerical data to specified ranges.
+"""
 import json
 
 
 class MinMaxScaler:
     """
     A class for scaling numerical data to a specified range (default: [0, 1]).
-
-    Parameters
-    ----------
-    data : list, optional, default: None
-        The input data to compute scaling parameters. If not provided, an empty
-        list is used.
 
     Attributes
     ----------
@@ -19,18 +18,17 @@ class MinMaxScaler:
         A list containing the minimum values for each column in the input data.
     column_maxes : list
         A list containing the maximum values for each column in the input data.
-
-    Examples
-    --------
-    >>> scaler = MinMaxScaler(data=[[1, 2, 3], [4, 5, 6]])
-    >>> scaled_data = scaler.transform([2, 5, 4])
-    >>> original_data = scaler.inverse_transform(scaled_data)
-    >>> params = scaler.get_params()
-    >>> new_scaler = MinMaxScaler()
-    >>> new_scaler.load_params(params)
     """
 
     def __init__(self, data=None):
+        """
+        Initialize the MinMaxScaler.
+
+        Parameters
+        ----------
+        data : list, optional, default: None
+            The input data to compute scaling parameters. If not provided, an empty list is used.
+        """
         self.data = data or []
         columns = [list(column) for column in zip(*self.data)]
         self.column_mins = [min(column) for column in columns]
@@ -58,10 +56,8 @@ class MinMaxScaler:
         ----------
         source : dict, str, or pathlib.Path
             If a dictionary, it should contain scaling parameters.
-            If a string, it is treated as a file path to a JSON file
-            containing scaling parameters.
-            If a pathlib.Path object, it is treated as the path to a JSON file
-            containing scaling parameters.
+            If a string, it is treated as a file path to a JSON file containing scaling parameters.
+            If a pathlib.Path object, it is treated as the path to a JSON file containing scaling parameters.
         """
         params = ["column_mins", "column_maxes"]
 
@@ -93,10 +89,12 @@ class MinMaxScaler:
 
             for i in range(len(row)):
                 try:
+                    # Scale each element to the range [0, 1].
                     transformed_row.append(
                         (row[i] - self.column_mins[i]) / (self.column_maxes[i] - self.column_mins[i])
                     )
                 except ZeroDivisionError:
+                    # Handle the case where the denominator is zero.
                     transformed_row.append(0.0)
 
             transformed_data.append(transformed_row)
@@ -122,6 +120,7 @@ class MinMaxScaler:
         for row in data:
             inverse_transformed_data.append(
                 [
+                    # Inverse scale each element back to the original range
                     (row[i] * (self.column_maxes[i] - self.column_mins[i])) + self.column_mins[i]
                     for i in range(len(row))
                 ]

@@ -1,7 +1,20 @@
+"""
+Argument Parsers Module
+
+This module provides argument parsers for the main script.
+"""
 import argparse
 
 
 def make_main_arg_parser():
+    """
+    Create and configure the argument parser for the main script.
+
+    Returns
+    -------
+    argparse.ArgumentParser
+        Configured argument parser.
+    """
     parser = argparse.ArgumentParser(
         prog="simple_ffn",
         description="Simple FFN",
