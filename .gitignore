@@ -194,7 +194,7 @@ fabric.properties
 *.vsix
 
 # Model checkpoints.
-*_checkpoint.*
+# *_checkpoint.*
 
 # Tensorboard
 /logs
