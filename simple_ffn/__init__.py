@@ -62,5 +62,5 @@ def main():
         ...
 
     # Save network and loss plot.
-    network.save("ffn_checkpoint.json")
+    network.save(DEFAULT_CHECKPOINT_FILENAME)
     network.save_loss_plot()

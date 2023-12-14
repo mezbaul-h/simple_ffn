@@ -1,14 +1,12 @@
-import math
-
 from simple_ffn import networks
-from simple_ffn.settings import PROJECT_ROOT
+from simple_ffn.settings import DEFAULT_CHECKPOINT_FILENAME, PROJECT_ROOT
 
 
 class NeuralNetHolder:
     def __init__(self):
         super().__init__()
 
-        self.network = networks.Sequential.load(PROJECT_ROOT / "ffn_checkpoint.json")
+        self.network = networks.Sequential.load(PROJECT_ROOT / DEFAULT_CHECKPOINT_FILENAME)
 
     def predict(self, input_row: str):
         input_row = [float(item) for item in input_row.split(",")]
