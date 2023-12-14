@@ -15,8 +15,8 @@ def main():
     """
     Entry point for the main script.
 
-    Parses command-line arguments, initializes a neural network, processes the dataset,
-    and either trains a new network or resumes training from a checkpoint.
+    Parses command-line arguments, initializes a neural network, processes the dataset, and either trains a new network
+    or resumes training from a checkpoint.
 
     Prints CLI arguments and saves the trained network and loss plot.
     """

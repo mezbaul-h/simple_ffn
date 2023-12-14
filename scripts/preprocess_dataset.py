@@ -1,8 +1,8 @@
 """
 Dataset Preprocessing Script
 
-This script reads a dataset from a CSV file, performs preprocessing steps including
-scaling features and outputs, and writes the preprocessed datasets to separate CSV files.
+This script reads a dataset from a CSV file, performs preprocessing steps including scaling features and outputs, and
+writes the preprocessed datasets to separate CSV files.
 """
 import csv
 import json
@@ -19,6 +19,34 @@ from simple_ffn.utils import read_dataset_csv, train_test_split
 DATASET_FILE_PREFIX = "ce889_dataCollection"
 SOURCE_DATASET_PATH = PROJECT_ROOT / "data" / f"{DATASET_FILE_PREFIX}.csv"
 TARGET_DIR = PROJECT_ROOT / "data"
+
+
+def filter_duplicate_rows(data):
+    """
+    Filter duplicate rows based on the combination of values in columns 1 and 2, keeping the last occurrence.
+
+    Parameters
+    ----------
+    data : list of lists
+        The input data containing rows with columns 1 and 2.
+
+    Returns
+    -------
+    list of lists
+        Filtered data with only the last occurrence of each unique combination of values in columns 1 and 2.
+    """
+    # Create a dictionary to store unique rows with their last occurrence.
+    unique_rows = {}
+
+    for row in data:
+        if not all([not item for item in row]):  # Skip rows with all zero values.
+            key = tuple(row[:2])  # Use the first two elements as a key for comparison.
+            unique_rows[key] = row
+
+    # Convert the dictionary values back to a list of lists.
+    result = list(unique_rows.values())
+
+    return result
 
 
 def write_dataset_csv(csv_filename, features, outputs):
@@ -45,7 +73,7 @@ def main():
     """
     Main function to read, preprocess, and save datasets.
     """
-    x, y = read_dataset_csv(SOURCE_DATASET_PATH, criterion=lambda row: all([float(column) != 0 for column in row]))
+    x, y = read_dataset_csv(SOURCE_DATASET_PATH, transformer=filter_duplicate_rows)
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42, test_size=0.3)
     x_test, x_validation, y_test, y_validation = train_test_split(x_test, y_test, random_state=42, test_size=0.1)
 
