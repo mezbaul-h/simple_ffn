@@ -1,8 +1,9 @@
 # Feed-Forward Neural Network with Backpropagation
 
-This repository contains a pure Python implementation of a Feed-Forward neural network with Backpropagation.
+This repository features a pure Python implementation of a Feed-Forward neural network with Backpropagation. It serves as the foundation for training a shallow deep learning model designed to play the lander game. This project constituted my final individual assignment for the course CE889: Neural Networks and Deep Learning during my master's studies at the University of Essex.
 
-## Installation and Usage
+
+## Installation
 
 ### Pre-requisites
 
@@ -20,7 +21,7 @@ git clone https://github.com/mezbaul-h/simple_ffn.git
 cd simple_ffn
 ```
 
-### Install Dependencies
+### Install Python Dependencies
 
 Use a Python virtual environment to avoid contaminating the global package space. Install dependencies from requirements.txt:
 
@@ -28,13 +29,18 @@ Use a Python virtual environment to avoid contaminating the global package space
 pip install -r requirements.txt
 ```
 
+
+## Usage
+
 ### Run Neural Network
 
-You can run the network with desired hyperparameters as a module from the command line:
+To execute the network with customized hyperparameters as a module from the command line, use the following:
 
 ```shell
-python -m simple_ffn -e 10 -lr 0.01 -m 0.9
+python -m simple_ffn --num-epochs 10 --learning-rate 0.01 --momentum 0.9 --hidden-size 2
 ```
+
+This command will store the model states in a [checkpoint](#checkpoint-file) file.
 
 ### Run Lander Game
 
@@ -43,6 +49,11 @@ To run the lander game, use the following command:
 ```shell
 python -m lander
 ```
+
+
+## Checkpoint File
+
+The program defaults to utilizing the checkpoint file specified by the `DEFAULT_CHECKPOINT_FILENAME` constant in [simple_ffn/settings.py](simple_ffn/settings.py) for both saving (during training) and loading (for resuming training and in-game model loading) states.
 
 
 ## Dataset Preprocessing
@@ -63,7 +74,7 @@ The preprocessing script performs the following:
 
 ## Grid Search (Hyperparameter Tuning)
 
-Initiate the grid search with the following command:
+You can initiate the grid search with the following command:
 
 ```shell
 python scripts/grid_search.py
