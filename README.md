@@ -50,6 +50,8 @@ To run the lander game, use the following command:
 python -m lander
 ```
 
+To employ the trained model for gameplay, select "**Neural Network**" from the menu after launching the game. Subsequently, click any button to initiate rocket movement, and the model will seamlessly handle the movements thereafter.
+
 
 ## Checkpoint File
 
